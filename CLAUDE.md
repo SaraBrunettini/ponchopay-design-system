@@ -10,7 +10,7 @@ HeroUI v3 is a modern React UI library built with Tailwind CSS v4, using a pnpm 
 
 - **Node.js**: v22+ required
 - **pnpm**: v10.26.2 (package manager)
-- **React**: v19+
+- **React**: 18.3+ and 19 (peer range `>=18.3 <20`; see "React 18.3 compatibility")
 - **Tailwind CSS**: v4.3.3
 - **TypeScript**: v5.9.3
 - **Turborepo**: Build orchestration
@@ -135,9 +135,22 @@ git commit -m "ci: add Claude Code GitHub Action workflow"
 │   ├── standard/      # Shared ESLint, Prettier, TypeScript configs
 │   ├── storybook/     # Storybook configuration
 │   └── testing/       # Shared test harness (@heroui/testing)
+├── skills/            # Published agent skills (heroui-react, heroui-native, heroui-migration)
+├── prompts/           # AI prompt packs for v0 / bolt / generic LLMs
+├── .claude/           # Project subagents (docs-curator, style-migrator, …) and guides
+├── .design-sync/      # Claude Design sync config (see "Design Sync" below)
 ├── turbo.json         # Turborepo configuration
 └── pnpm-workspace.yaml # Workspace definition
 ```
+
+`AGENTS.md` mirrors much of this file for non-Claude agents; keep the two in sync when changing shared guidance.
+
+### Non-obvious Gotchas
+
+- `pnpm i` only runs `typegen:docs` on postinstall; it does **not** build `@heroui/styles`. Run `pnpm build` when you need `dist/` output.
+- `@heroui/styles` must build before `@heroui/react`; root `pnpm build` handles this via Turbo `^build`.
+- `onlyBuiltDependencies` in `pnpm-workspace.yaml` allowlists native builds (esbuild, swc, sharp, …); missing entries produce "Ignored build scripts" warnings.
+- Husky runs `lint-staged` on pre-commit and `commitlint` on commit-msg.
 
 ### Component Architecture Pattern
 
@@ -254,17 +267,17 @@ export {componentVariants, type ComponentVariants} from "@heroui/styles";
 // Context for sharing state/styles
 const ComponentContext = createContext<{slots?: ReturnType<typeof componentVariants>}>({});
 
-// Root component wraps with context (React 19: ref is a regular prop)
+// Root component wraps with context (ref is a regular prop; see the React 18.3 rules below)
 const ComponentRoot = ({children, className, ref, ...props}: ComponentPropsWithRef<"div">) => {
   const slots = React.useMemo(() => componentVariants({...}), [...]);
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <ComponentContext value={contextValue}>
+    <ComponentContext.Provider value={contextValue}>
       <ReactAriaComponent {...props} ref={ref} className={composeTwRenderProps(className, slots.base())}>
         {children}
       </ReactAriaComponent>
-    </ComponentContext>
+    </ComponentContext.Provider>
   );
 };
 
@@ -302,9 +315,15 @@ export {ComponentRoot, ComponentItem};
 
 2. **Component Features**:
    - Built on React Aria Components for accessibility
-   - Accept `ref` as a regular prop (React 19) — do not use `forwardRef`
+   - Accept `ref` as a regular prop — do not use `forwardRef`, except on a component that another HeroUI component passes a ref to (e.g. `ScrollShadow`, used by `Tabs`)
    - Display names follow: `HeroUI.ComponentName` or `HeroUI.Component.SubPart`
    - Support render props from React Aria when available
+
+   **React 18.3 compatibility**: `@heroui/react` supports React 18.3 as well as 19, and the Claude Design bundle runs on a React 18.3.1 host. Do not use React 19-only APIs:
+   - `useContext(Ctx)`, never `use(Ctx)` (`use` does not exist in React 18)
+   - `<Ctx.Provider value={...}>`, never `<Ctx value={...}>` (React 18 renders a bare Context as a Consumer)
+   - No `useActionState`, `useFormStatus`, `useOptimistic`, `ReactDOM.preload`/`preinit`, or `<form action={fn}>`
+   - Ref-as-prop is a known gap: on React 18, a user-passed `ref` reaches only components built with `forwardRef` or directly on React Aria primitives; others drop it with a warning
 
 3. **Type Exports**:
 
@@ -505,7 +524,7 @@ This workflow ensures thorough understanding, proper planning, and high-quality 
    - Add the styles directory's `index.ts` and export it from `packages/styles/src/components/index.ts`.
    - Create `packages/styles/components/<component-name>.css` and register it in `packages/styles/components/index.css`, after any shared primitives it overrides.
    - Update component imports and React barrel re-exports to use `@heroui/styles` instead of the generated local styles path.
-   - Replace generated `forwardRef` with React 19 ref-as-prop handling, choose the appropriate React Aria primitive, and forward remaining DOM/ARIA/event props.
+   - Replace generated `forwardRef` with ref-as-prop handling (or `forwardRef` when another HeroUI component passes it a ref), choose the appropriate React Aria primitive, and forward remaining DOM/ARIA/event props.
    - Add documented `data-slot` hooks, named compound exports where appropriate, current Storybook examples, and behavioral tests (SSR/browser when the risk criteria apply).
 
    After creating the component:
@@ -614,6 +633,17 @@ This workflow ensures thorough understanding, proper planning, and high-quality 
 ## Icon Library
 
 **IMPORTANT**: HeroUI uses Iconify with gravity-ui as the default icon set.
+
+## Design Sync (Claude Design)
+
+`.design-sync/` holds the config that publishes `@heroui/react` to the claude.ai/design project "HeroUI React 3.2" from the Storybook build.
+
+- **Tracked**: `config.json` (storybook shape, `titleMap`, `docsDir`, per-component card overrides and story skips), `conventions.md` (usage header shown to the design agent), `NOTES.md` (repo gotchas and re-sync risks; read it before re-syncing), and `overrides/` (forked sync-lib modules with `[FORK]` edits, plus `forks.test.mjs`).
+- **Gitignored / generated**: `.ds-sync/` (the sync skill's lib), `ds-bundle/` (output bundle), `.design-sync/sb-reference/`, `*.log`, `node_modules`.
+- Test the forks with `node --test .design-sync/overrides/forks.test.mjs` (skipped when `.ds-sync/` is absent).
+- After the sync skill updates, diff `overrides/*.mjs` against the new `.ds-sync/lib` versions and re-apply the `[FORK]` blocks.
+- The design bundle's CSS is scraped from the Storybook build (a Tailwind subset), so changes to `packages/storybook/styles/globals.css` or story class usage change what designs can use. Re-validate the class list in `conventions.md` after each sync.
+- Skipped stories (FocusScope-sentinel capture false positives, horizontal ScrollShadow hangs) are listed with reasons in `NOTES.md`; don't "fix" them in the components.
 
 ## Important Notes
 

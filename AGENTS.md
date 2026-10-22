@@ -12,7 +12,7 @@ HeroUI v3 is a modern React UI library built with **Tailwind CSS v4**, organized
 |---|---|---|
 | Node.js | 22+ | Runtime |
 | pnpm | 10.26.2 | Package manager (via corepack) |
-| React | 19+ | UI framework |
+| React | 18.3+ and 19 | UI framework (no React 19-only APIs; see Gotchas) |
 | Tailwind CSS | 4.x | Styling |
 | TypeScript | 5.x | Type safety |
 | Turborepo | 2.x | Build orchestration |
@@ -159,7 +159,7 @@ The scaffold is a starting point and still emits legacy patterns. Before using t
 2. Add that directory's `index.ts` and export it from `packages/styles/src/components/index.ts`.
 3. Create `packages/styles/components/<component-name>.css` and import it in `packages/styles/components/index.css`. Import shared primitives before components that override them.
 4. Update the component and React barrel to import/re-export variants from `@heroui/styles` instead of the generated local styles path.
-5. Replace generated `forwardRef` with React 19 ref-as-prop handling, use the appropriate React Aria primitive, and forward remaining DOM/ARIA/event props. Add documented `data-slot` hooks and follow the named compound export pattern below.
+5. Replace generated `forwardRef` with ref-as-prop handling (or `forwardRef` when another HeroUI component passes it a ref), use the appropriate React Aria primitive, and forward remaining DOM/ARIA/event props. Add documented `data-slot` hooks and follow the named compound export pattern below.
 6. Update Storybook examples and add behavioral tests, including SSR/browser coverage when the risk criteria above apply.
 
 Build from the repository root after wiring these files:
@@ -180,16 +180,16 @@ HeroUI uses a compound component pattern. Each component exports its sub-parts s
 // Context shares state/styles across parts
 const ComponentContext = createContext<{slots?: ReturnType<typeof componentVariants>}>({});
 
-// Root wraps children with context (React 19: ref is a regular prop)
+// Root wraps children with context (ref is a regular prop; see the React 18.3 rules below)
 const ComponentRoot = ({children, className, ref, ...props}: ComponentPropsWithRef<"div">) => {
   const slots = useMemo(() => componentVariants({...}), [...]);
   const contextValue = useMemo(() => ({slots}), [slots]);
   return (
-    <ComponentContext value={contextValue}>
+    <ComponentContext.Provider value={contextValue}>
       <ReactAriaPrimitive {...props} ref={ref} className={composeTwRenderProps(className, slots.base())}>
         {children}
       </ReactAriaPrimitive>
-    </ComponentContext>
+    </ComponentContext.Provider>
   );
 };
 
@@ -368,6 +368,8 @@ Source of truth: `packages/react/src/components/index.ts`. Keep this inventory a
 5. **Commit hooks** — Husky runs `lint-staged` on pre-commit and `commitlint` on commit-msg. Non-conforming commits are rejected.
 
 6. **Run checks before committing** — `pnpm lint && pnpm typecheck && pnpm test`
+
+7. **React 18.3 compatibility** — Peer range is `>=18.3 <20`. Use `useContext(Ctx)` (not `use(Ctx)`) and `<Ctx.Provider value>` (not `<Ctx value>`); avoid `useActionState`, `useFormStatus`, `useOptimistic`, `ReactDOM.preload`/`preinit`. Keep ref-as-prop, but use `forwardRef` on any component another HeroUI component passes a ref to (e.g. `ScrollShadow` in `Tabs`). On React 18, user-passed refs to other ref-as-prop components are dropped.
 
 ## Cursor Cloud Specific
 
