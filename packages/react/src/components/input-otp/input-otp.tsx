@@ -6,7 +6,7 @@ import type {ValidationResult} from "react-aria-components/CheckboxGroup";
 
 import {inputOTPVariants} from "@heroui/styles";
 import {OTPInput, OTPInputContext} from "input-otp";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {FieldErrorContext} from "react-aria-components/FieldError";
 
 import {dataAttr} from "../../utils/assertion";
@@ -70,8 +70,8 @@ const InputOTPRoot = ({
   );
 
   return (
-    <InputOTPContext value={contextValue}>
-      <FieldErrorContext value={validation}>
+    <InputOTPContext.Provider value={contextValue}>
+      <FieldErrorContext.Provider value={validation}>
         <OTPInput
           // OTP Input package uses the `className` prop for the actual `input` element which is not visible to the user so no need to pass it to the base container
           className={slots.input({className: inputClassName})}
@@ -82,8 +82,8 @@ const InputOTPRoot = ({
           disabled={isDisabled}
           {...props}
         />
-      </FieldErrorContext>
-    </InputOTPContext>
+      </FieldErrorContext.Provider>
+    </InputOTPContext.Provider>
   );
 };
 
@@ -94,7 +94,7 @@ const InputOTPRoot = ({
 interface InputOTPGroupProps extends ComponentPropsWithRef<"div"> {}
 
 const InputOTPGroup = ({className, ...props}: InputOTPGroupProps) => {
-  const {slots} = use(InputOTPContext);
+  const {slots} = useContext(InputOTPContext);
 
   return (
     <div
@@ -113,9 +113,9 @@ interface InputOTPSlotProps extends ComponentPropsWithRef<"div"> {
 }
 
 const InputOTPSlot = ({className, index, ...props}: InputOTPSlotProps) => {
-  const {isDisabled, isInvalid, slots} = use(InputOTPContext);
+  const {isDisabled, isInvalid, slots} = useContext(InputOTPContext);
 
-  const inputOTPContext = use(OTPInputContext);
+  const inputOTPContext = useContext(OTPInputContext);
   const {char, hasFakeCaret, isActive} = inputOTPContext?.slots[index] ?? {};
 
   return (
@@ -148,7 +148,7 @@ interface InputOTPSeparatorProps extends ComponentPropsWithRef<"div"> {
 }
 
 const InputOTPSeparator = ({className, ...props}: InputOTPSeparatorProps) => {
-  const {slots} = use(InputOTPContext);
+  const {slots} = useContext(InputOTPContext);
 
   return (
     <div

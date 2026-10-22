@@ -10,8 +10,8 @@ import {toastVariants} from "@heroui/styles";
 import {mergeRefs} from "@react-aria/utils";
 import React, {
   createContext,
-  use,
   useCallback,
+  useContext,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -171,12 +171,12 @@ const Toast = <T extends object = ToastContentValue>({
     placement: contextPlacement,
     scaleFactor: contextScaleFactor,
     slots,
-  } = use(ToastContext);
+  } = useContext(ToastContext);
 
   const finalPlacement = placement ?? contextPlacement;
   const finalScaleFactor = scaleFactor ?? contextScaleFactor ?? DEFAULT_SCALE_FACTOR;
 
-  const state = use(ToastStateContext)!;
+  const state = useContext(ToastStateContext)!;
   const visibleToasts = state.visibleToasts;
   const toastKey = toast?.key;
   const isExiting = toastKey != null && (exitingKeys?.has(toastKey) ?? false);
@@ -347,7 +347,7 @@ Toast.displayName = "HeroUI.Toast";
 interface ToastContentProps extends ComponentPropsWithRef<typeof ToastContentPrimitive> {}
 
 const ToastContent = ({children, className, ...rest}: ToastContentProps) => {
-  const {slots} = use(ToastContext);
+  const {slots} = useContext(ToastContext);
 
   return (
     <ToastContentPrimitive
@@ -377,7 +377,7 @@ const ToastIndicator = <E extends keyof React.JSX.IntrinsicElements = "div">({
   variant,
   ...rest
 }: ToastIndicatorProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof ToastIndicatorProps<E>>) => {
-  const {slots} = use(ToastContext);
+  const {slots} = useContext(ToastContext);
 
   // The swap marker lets CSS animate content that replaces earlier content (a promise toast settling) without animating the first paint.
   const childrenKind = React.isValidElement(children) ? children.type : (children ?? "default");
@@ -426,7 +426,7 @@ ToastIndicator.displayName = "HeroUI.ToastIndicator";
 interface ToastTitleProps extends ComponentPropsWithRef<typeof TextPrimitive> {}
 
 const ToastTitle = ({children, className, ...rest}: ToastTitleProps) => {
-  const {slots} = use(ToastContext);
+  const {slots} = useContext(ToastContext);
 
   return (
     <TextPrimitive
@@ -448,7 +448,7 @@ ToastTitle.displayName = "HeroUI.ToastTitle";
 interface ToastDescriptionProps extends ComponentPropsWithRef<typeof TextPrimitive> {}
 
 const ToastDescription = ({children, className, ...rest}: ToastDescriptionProps) => {
-  const {slots} = use(ToastContext);
+  const {slots} = useContext(ToastContext);
 
   return (
     <TextPrimitive
@@ -470,7 +470,7 @@ ToastDescription.displayName = "HeroUI.ToastDescription";
 interface ToastCloseButtonProps extends ComponentPropsWithRef<typeof CloseButton> {}
 
 const ToastCloseButton = ({className, ...rest}: ToastCloseButtonProps) => {
-  const {slots} = use(ToastContext);
+  const {slots} = useContext(ToastContext);
 
   return (
     <CloseButton
@@ -490,7 +490,7 @@ ToastCloseButton.displayName = "HeroUI.ToastCloseButton";
 interface ToastActionButtonProps extends ComponentPropsWithRef<typeof Button> {}
 
 const ToastActionButton = ({children, className, ...rest}: ToastActionButtonProps) => {
-  const {slots} = use(ToastContext);
+  const {slots} = useContext(ToastContext);
 
   return (
     <Button
@@ -934,13 +934,13 @@ const ToastProvider = <T extends object = ToastContentValue>({
         };
 
         return (
-          <ToastContext value={contextValue}>
+          <ToastContext.Provider value={contextValue}>
             {typeof children === "undefined"
               ? getDefaultChildren(renderProps)
               : typeof children === "function"
                 ? children(renderPropsWithIsLoading)
                 : children}
-          </ToastContext>
+          </ToastContext.Provider>
         );
       }}
     </ToastRegionPrimitive>

@@ -5,7 +5,7 @@ import type {LinkVariants} from "@heroui/styles";
 import type {ComponentPropsWithRef, ReactNode} from "react";
 
 import {linkVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {Link as LinkPrimitive} from "react-aria-components/Link";
 
 import {dataAttr} from "../../utils/assertion";
@@ -32,7 +32,7 @@ const LinkRoot = ({children, className, ...props}: LinkRootProps) => {
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <LinkContext value={contextValue}>
+    <LinkContext.Provider value={contextValue}>
       <LinkPrimitive
         data-slot="link"
         {...props}
@@ -40,7 +40,7 @@ const LinkRoot = ({children, className, ...props}: LinkRootProps) => {
       >
         {(values) => <>{typeof children === "function" ? children(values) : children}</>}
       </LinkPrimitive>
-    </LinkContext>
+    </LinkContext.Provider>
   );
 };
 
@@ -59,7 +59,7 @@ const LinkIcon = <E extends keyof React.JSX.IntrinsicElements = "span">({
   className,
   ...rest
 }: LinkIconProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof LinkIconProps<E>>) => {
-  const {slots} = use(LinkContext);
+  const {slots} = useContext(LinkContext);
 
   return (
     <dom.span

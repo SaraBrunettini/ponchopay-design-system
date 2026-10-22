@@ -6,7 +6,7 @@ import type {AvatarGroupVariants, AvatarVariants} from "@heroui/styles";
 import type {ReactElement, ReactNode} from "react";
 
 import {avatarGroupVariants} from "@heroui/styles";
-import React, {Children, isValidElement, use, useMemo} from "react";
+import React, {Children, isValidElement, useContext, useMemo} from "react";
 
 import {composeSlotClassName} from "../../utils/compose";
 import {dom} from "../../utils/dom";
@@ -33,7 +33,7 @@ const AvatarGroupCount = ({
   variant,
   ...props
 }: AvatarGroupCountProps) => {
-  const group = use(AvatarGroupContext);
+  const group = useContext(AvatarGroupContext);
   const finalSize = size ?? group.size;
   const finalColor = color ?? group.color;
   const finalVariant = variant ?? group.variant;
@@ -135,12 +135,12 @@ const AvatarGroupRoot = <E extends keyof React.JSX.IntrinsicElements = "div">({
   ) : null;
 
   return (
-    <AvatarGroupContext value={context}>
+    <AvatarGroupContext.Provider value={context}>
       <dom.div className={slots.base({className})} data-slot="avatar-group" {...(props as any)}>
         {wrappedChildren}
         {countContent}
       </dom.div>
-    </AvatarGroupContext>
+    </AvatarGroupContext.Provider>
   );
 };
 

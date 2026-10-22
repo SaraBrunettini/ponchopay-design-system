@@ -5,7 +5,7 @@ import type {TabsVariants} from "@heroui/styles";
 import type {ComponentPropsWithRef, ReactNode} from "react";
 
 import {tabsVariants} from "@heroui/styles";
-import React, {createContext, use, useCallback, useRef} from "react";
+import React, {createContext, useCallback, useContext, useRef} from "react";
 import {SelectionIndicator as SelectionIndicatorPrimitive} from "react-aria-components/SelectionIndicator";
 import {
   TabList as TabListPrimitive,
@@ -60,7 +60,7 @@ const TabsRoot = ({
   const contextValue = React.useMemo(() => ({orientation, slots}), [orientation, slots]);
 
   return (
-    <TabsContext value={contextValue}>
+    <TabsContext.Provider value={contextValue}>
       <TabsPrimitive
         {...props}
         className={composeTwRenderProps(className, slots.base())}
@@ -69,7 +69,7 @@ const TabsRoot = ({
       >
         {children}
       </TabsPrimitive>
-    </TabsContext>
+    </TabsContext.Provider>
   );
 };
 
@@ -108,7 +108,7 @@ interface TabListProps extends ComponentPropsWithRef<typeof TabListPrimitive<obj
 }
 
 const TabList = ({children, className, ...props}: TabListProps) => {
-  const {orientation = "horizontal", slots} = use(TabsContext);
+  const {orientation = "horizontal", slots} = useContext(TabsContext);
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const isVertical = orientation === "vertical";
 
@@ -237,7 +237,7 @@ interface TabProps extends ComponentPropsWithRef<typeof TabPrimitive> {
 }
 
 const Tab = ({children, className, ...props}: TabProps) => {
-  const {slots} = use(TabsContext);
+  const {slots} = useContext(TabsContext);
 
   return (
     <TabPrimitive
@@ -258,7 +258,7 @@ interface TabIndicatorProps extends ComponentPropsWithRef<typeof SelectionIndica
 }
 
 const TabIndicator = ({className, ...props}: TabIndicatorProps) => {
-  const {slots} = use(TabsContext);
+  const {slots} = useContext(TabsContext);
 
   return (
     <SelectionIndicatorPrimitive
@@ -278,7 +278,7 @@ interface TabPanelProps extends Omit<ComponentPropsWithRef<typeof TabPanelPrimit
 }
 
 const TabPanel = ({children, className, ...props}: TabPanelProps) => {
-  const {slots} = use(TabsContext);
+  const {slots} = useContext(TabsContext);
 
   return (
     <TabPanelPrimitive
@@ -304,7 +304,7 @@ const TabSeparator = <E extends keyof React.JSX.IntrinsicElements = "span">({
   className,
   ...props
 }: TabSeparatorProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof TabSeparatorProps<E>>) => {
-  const {slots} = use(TabsContext);
+  const {slots} = useContext(TabsContext);
 
   return (
     <dom.span

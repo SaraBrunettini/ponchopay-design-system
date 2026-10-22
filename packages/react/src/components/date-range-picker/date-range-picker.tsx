@@ -8,7 +8,7 @@ import type {DateValue} from "react-aria-components/Calendar";
 
 import {dateRangePickerVariants} from "@heroui/styles";
 import {mergeRefs} from "@react-aria/utils";
-import React, {createContext, use, useEffect, useRef} from "react";
+import React, {createContext, useContext, useEffect, useRef} from "react";
 import {Button as ButtonPrimitive} from "react-aria-components/Button";
 import {
   DateRangePicker as DateRangePickerPrimitive,
@@ -82,7 +82,7 @@ const DateRangePickerRoot = <T extends DateValue>({
   const contextValue = React.useMemo(() => ({slots, triggerRef}), [slots, triggerRef]);
 
   return (
-    <DateRangePickerContext value={contextValue}>
+    <DateRangePickerContext.Provider value={contextValue}>
       <DateRangePickerPrimitive
         data-required={dataAttr(props.isRequired)}
         data-slot="date-range-picker"
@@ -92,7 +92,7 @@ const DateRangePickerRoot = <T extends DateValue>({
       >
         {(values) => <>{typeof children === "function" ? children(values) : children}</>}
       </DateRangePickerPrimitive>
-    </DateRangePickerContext>
+    </DateRangePickerContext.Provider>
   );
 };
 
@@ -109,7 +109,7 @@ const DateRangePickerTrigger = ({
   ref,
   ...props
 }: DateRangePickerTriggerProps) => {
-  const {slots, triggerRef} = use(DateRangePickerContext);
+  const {slots, triggerRef} = useContext(DateRangePickerContext);
 
   const contextRefCallback = React.useCallback(
     (node: HTMLButtonElement | null) => {
@@ -152,7 +152,7 @@ const DateRangePickerTriggerIndicator = <E extends keyof React.JSX.IntrinsicElem
   ...props
 }: DateRangePickerTriggerIndicatorProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof DateRangePickerTriggerIndicatorProps<E>>) => {
-  const {slots} = use(DateRangePickerContext);
+  const {slots} = useContext(DateRangePickerContext);
 
   return (
     <dom.span
@@ -184,7 +184,7 @@ const DateRangePickerRangeSeparator = <E extends keyof React.JSX.IntrinsicElemen
   ...props
 }: DateRangePickerRangeSeparatorProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof DateRangePickerRangeSeparatorProps<E>>) => {
-  const {slots} = use(DateRangePickerContext);
+  const {slots} = useContext(DateRangePickerContext);
 
   return (
     <dom.span
@@ -216,10 +216,10 @@ const DateRangePickerPopover = ({
   placement = "bottom",
   ...props
 }: DateRangePickerPopoverProps) => {
-  const {slots} = use(DateRangePickerContext);
+  const {slots} = useContext(DateRangePickerContext);
 
   return (
-    <SurfaceContext
+    <SurfaceContext.Provider
       value={{
         variant: "default" as SurfaceVariants["variant"],
       }}
@@ -232,7 +232,7 @@ const DateRangePickerPopover = ({
       >
         {children}
       </PopoverPrimitive>
-    </SurfaceContext>
+    </SurfaceContext.Provider>
   );
 };
 

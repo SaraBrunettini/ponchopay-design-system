@@ -5,7 +5,7 @@ import type {ComponentPropsWithRef} from "react";
 
 import {avatarVariants} from "@heroui/styles";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 
 import {composeSlotClassName} from "../../utils/compose";
 import {AVATAR_GROUP_CHILD, AvatarGroupContext} from "../avatar-group/avatar-group-context";
@@ -36,7 +36,7 @@ const AvatarRoot = ({
   [AVATAR_GROUP_CHILD]: isAvatarGroupChild,
   ...props
 }: AvatarRootProps) => {
-  const avatarGroupContext = use(AvatarGroupContext);
+  const avatarGroupContext = useContext(AvatarGroupContext);
 
   // Only use group context when this avatar is a direct child of AvatarGroup
   const shouldUseContext = isAvatarGroupChild === true;
@@ -53,11 +53,11 @@ const AvatarRoot = ({
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <AvatarContext value={contextValue}>
+    <AvatarContext.Provider value={contextValue}>
       <AvatarPrimitive.Root className={slots.base({className})} {...props}>
         {children}
       </AvatarPrimitive.Root>
-    </AvatarContext>
+    </AvatarContext.Provider>
   );
 };
 
@@ -77,7 +77,7 @@ const AvatarImage = ({
   srcSet,
   ...props
 }: AvatarImageProps) => {
-  const {slots} = React.use(AvatarContext);
+  const {slots} = React.useContext(AvatarContext);
 
   return (
     <AvatarPrimitive.Image
@@ -102,7 +102,7 @@ interface AvatarFallbackProps extends ComponentPropsWithRef<typeof AvatarPrimiti
 }
 
 const AvatarFallback = ({className, color, ...props}: AvatarFallbackProps) => {
-  const {slots} = React.use(AvatarContext);
+  const {slots} = React.useContext(AvatarContext);
 
   return (
     <AvatarPrimitive.Fallback

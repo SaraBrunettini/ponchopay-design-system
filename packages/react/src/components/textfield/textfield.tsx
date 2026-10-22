@@ -41,9 +41,9 @@ const TextFieldRoot = ({children, className, fullWidth, variant, ...props}: Text
       className={composeTwRenderProps(className, styles)}
     >
       {(values) => (
-        <TextFieldContext value={contextValue}>
+        <TextFieldContext.Provider value={contextValue}>
           <>{typeof children === "function" ? children(values) : children}</>
-        </TextFieldContext>
+        </TextFieldContext.Provider>
       )}
     </TextFieldPrimitive>
   );

@@ -8,7 +8,7 @@ import type {ComponentPropsWithRef, ReactNode, RefObject} from "react";
 
 import {autocompleteVariants} from "@heroui/styles";
 import {mergeRefs, useResizeObserver} from "@react-aria/utils";
-import React, {createContext, use, useCallback, useRef, useState} from "react";
+import React, {createContext, useCallback, useContext, useRef, useState} from "react";
 import {useIsHidden} from "react-aria/private/collections/Hidden";
 import {Autocomplete as AutocompletePrimitive} from "react-aria-components/Autocomplete";
 import {Button as ButtonPrimitive} from "react-aria-components/Button";
@@ -77,7 +77,7 @@ const AutocompleteRoot = <T extends object = object, M extends "single" | "multi
 
   return (
     <FieldSlotsGate>
-      <AutocompleteContext value={context}>
+      <AutocompleteContext.Provider value={context}>
         <SelectPrimitive
           data-slot="autocomplete"
           {...props}
@@ -86,7 +86,7 @@ const AutocompleteRoot = <T extends object = object, M extends "single" | "multi
         >
           {(values) => <>{typeof children === "function" ? children(values) : children}</>}
         </SelectPrimitive>
-      </AutocompleteContext>
+      </AutocompleteContext.Provider>
     </FieldSlotsGate>
   );
 };
@@ -104,8 +104,13 @@ const AutocompleteTrigger = ({
   ref,
   ...props
 }: AutocompleteTriggerProps) => {
-  const {clearButtonRef, isDisabled: rootDisabled, slots, triggerRef} = use(AutocompleteContext);
-  const state = use(SelectStateContext);
+  const {
+    clearButtonRef,
+    isDisabled: rootDisabled,
+    slots,
+    triggerRef,
+  } = useContext(AutocompleteContext);
+  const state = useContext(SelectStateContext);
   const isDisabled = isDisabledProp ?? rootDisabled ?? false;
   const isHidden = useIsHidden();
 
@@ -158,7 +163,7 @@ AutocompleteTrigger.displayName = "AutocompleteTrigger";
 interface AutocompleteValueProps extends ComponentPropsWithRef<typeof SelectValuePrimitive> {}
 
 const AutocompleteValue = ({children, className, ...props}: AutocompleteValueProps) => {
-  const {slots} = use(AutocompleteContext);
+  const {slots} = useContext(AutocompleteContext);
 
   return (
     <SelectValuePrimitive
@@ -187,8 +192,8 @@ const AutocompleteIndicator = <E extends keyof React.JSX.IntrinsicElements = "sv
   ...props
 }: AutocompleteIndicatorProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof AutocompleteIndicatorProps<E>>) => {
-  const {slots} = use(AutocompleteContext);
-  const state = use(SelectStateContext);
+  const {slots} = useContext(AutocompleteContext);
+  const state = useContext(SelectStateContext);
 
   const indicator =
     children && React.isValidElement(children) ? (
@@ -234,7 +239,7 @@ const AutocompletePopover = ({
   style,
   ...props
 }: AutocompletePopoverProps) => {
-  const {slots, triggerRef} = use(AutocompleteContext);
+  const {slots, triggerRef} = useContext(AutocompleteContext);
   const [triggerWidth, setTriggerWidth] = useState<string | null>(null);
 
   const onResize = useCallback(() => {
@@ -246,7 +251,7 @@ const AutocompletePopover = ({
   useResizeObserver({ref: triggerRef, onResize});
 
   return (
-    <SurfaceContext
+    <SurfaceContext.Provider
       value={{
         variant: "default" as SurfaceVariants["variant"],
       }}
@@ -266,7 +271,7 @@ const AutocompletePopover = ({
       >
         {children}
       </PopoverPrimitive>
-    </SurfaceContext>
+    </SurfaceContext.Provider>
   );
 };
 
@@ -300,8 +305,8 @@ const AutocompleteClearButton = <E extends keyof React.JSX.IntrinsicElements = "
   ...props
 }: AutocompleteClearButtonProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof AutocompleteClearButtonProps<E>>) => {
-  const {clearButtonRef, isDisabled, onClear, slots} = use(AutocompleteContext);
-  const state = use(SelectStateContext);
+  const {clearButtonRef, isDisabled, onClear, slots} = useContext(AutocompleteContext);
+  const state = useContext(SelectStateContext);
 
   const clearButtonRefCallback = React.useCallback(
     (node: HTMLButtonElement | null) => {

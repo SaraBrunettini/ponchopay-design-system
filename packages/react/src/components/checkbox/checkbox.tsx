@@ -9,7 +9,7 @@ import type {
 } from "react-aria-components/Checkbox";
 
 import {checkboxVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {
   CheckboxButton as CheckboxButtonPrimitive,
   CheckboxField as CheckboxFieldPrimitive,
@@ -39,7 +39,7 @@ interface CheckboxRootProps
 }
 
 const CheckboxRoot = ({children, className, variant, ...props}: CheckboxRootProps) => {
-  const checkboxGroupContext = use(CheckboxGroupContext);
+  const checkboxGroupContext = useContext(CheckboxGroupContext);
   const effectiveVariant = variant ?? checkboxGroupContext.variant;
   const slots = React.useMemo(
     () => checkboxVariants({variant: effectiveVariant}),
@@ -53,9 +53,9 @@ const CheckboxRoot = ({children, className, variant, ...props}: CheckboxRootProp
       className={composeTwRenderProps(className, slots.base())}
     >
       {(state) => (
-        <CheckboxContext value={{slots, state}}>
+        <CheckboxContext.Provider value={{slots, state}}>
           {typeof children === "function" ? children(state) : children}
-        </CheckboxContext>
+        </CheckboxContext.Provider>
       )}
     </CheckboxFieldPrimitive>
   );
@@ -70,7 +70,7 @@ CheckboxRoot.displayName = "HeroUI.Checkbox";
 interface CheckboxContentProps extends ComponentPropsWithRef<typeof CheckboxButtonPrimitive> {}
 
 const CheckboxContent = ({children, className, ...props}: CheckboxContentProps) => {
-  const {slots} = use(CheckboxContext);
+  const {slots} = useContext(CheckboxContext);
 
   return (
     <CheckboxButtonPrimitive
@@ -79,9 +79,9 @@ const CheckboxContent = ({children, className, ...props}: CheckboxContentProps) 
       className={composeTwRenderProps(className, slots?.content())}
     >
       {(state) => (
-        <LabelContext value={LABEL_SPAN_CONTEXT}>
+        <LabelContext.Provider value={LABEL_SPAN_CONTEXT}>
           {typeof children === "function" ? children(state) : children}
-        </LabelContext>
+        </LabelContext.Provider>
       )}
     </CheckboxButtonPrimitive>
   );
@@ -104,7 +104,7 @@ const CheckboxControl = <E extends keyof React.JSX.IntrinsicElements = "span">({
   ...props
 }: CheckboxControlProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof CheckboxControlProps<E>>) => {
-  const {slots} = use(CheckboxContext);
+  const {slots} = useContext(CheckboxContext);
 
   return (
     <dom.span
@@ -134,7 +134,7 @@ const CheckboxIndicator = <E extends keyof React.JSX.IntrinsicElements = "span">
   ...props
 }: CheckboxIndicatorProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof CheckboxIndicatorProps<E>>) => {
-  const {slots, state} = use(CheckboxContext);
+  const {slots, state} = useContext(CheckboxContext);
 
   const isSelected = state?.isSelected;
   const isIndeterminate = state?.isIndeterminate;

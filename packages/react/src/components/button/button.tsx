@@ -4,7 +4,7 @@ import type {ButtonVariants} from "@heroui/styles";
 import type {ComponentPropsWithRef} from "react";
 
 import {buttonVariants} from "@heroui/styles";
-import {use} from "react";
+import {useContext} from "react";
 import {Button as ButtonPrimitive} from "react-aria-components/Button";
 
 import {composeTwRenderProps} from "../../utils";
@@ -30,7 +30,7 @@ const ButtonRoot = ({
   [BUTTON_GROUP_CHILD]: isButtonGroupChild,
   ...rest
 }: ButtonRootProps) => {
-  const buttonGroupContext = use(ButtonGroupContext);
+  const buttonGroupContext = useContext(ButtonGroupContext);
 
   // Only use context if this button is a direct child of ButtonGroup
   const shouldUseContext = isButtonGroupChild === true;

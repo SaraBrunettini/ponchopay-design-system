@@ -5,7 +5,7 @@ import type {ComponentPropsWithRef} from "react";
 import type {Button as ButtonPrimitive} from "react-aria-components/Button";
 
 import {tagVariants} from "@heroui/styles";
-import React, {Children, createContext, use, useMemo} from "react";
+import React, {Children, createContext, useContext, useMemo} from "react";
 import {Tag as TagPrimitive} from "react-aria-components/TagGroup";
 
 import {pickChildren} from "../../utils/children";
@@ -28,7 +28,7 @@ const TagContext = createContext<TagContext>({});
 interface TagRootProps extends ComponentPropsWithRef<typeof TagPrimitive>, TagVariants {}
 
 const TagRoot = ({children, className, ...restProps}: TagRootProps) => {
-  const {size, variant} = use(TagGroupContext);
+  const {size, variant} = useContext(TagGroupContext);
 
   const slots = useMemo(() => tagVariants({size, variant}), [size, variant]);
 
@@ -65,7 +65,7 @@ const TagRoot = ({children, className, ...restProps}: TagRootProps) => {
       {...restProps}
     >
       {(renderProps) => (
-        <TagContext value={contextValue}>
+        <TagContext.Provider value={contextValue}>
           {typeof children === "function" ? (
             children(renderProps)
           ) : (
@@ -79,7 +79,7 @@ const TagRoot = ({children, className, ...restProps}: TagRootProps) => {
                 ))}
             </>
           )}
-        </TagContext>
+        </TagContext.Provider>
       )}
     </TagPrimitive>
   );
@@ -93,7 +93,7 @@ type TagRemoveButtonProps = ComponentPropsWithRef<typeof ButtonPrimitive> & {
 };
 
 const TagRemoveButton = ({children, className, ...restProps}: TagRemoveButtonProps) => {
-  const {slots} = use(TagContext);
+  const {slots} = useContext(TagContext);
 
   return (
     <CloseButton

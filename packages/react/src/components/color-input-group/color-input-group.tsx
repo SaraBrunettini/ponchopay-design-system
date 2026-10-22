@@ -6,7 +6,7 @@ import type {ComponentPropsWithRef, ReactNode} from "react";
 import type {InputProps as InputPrimitiveProps} from "react-aria-components/Input";
 
 import {colorInputGroupVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {Group as GroupPrimitive} from "react-aria-components/Group";
 import {Input as InputPrimitive} from "react-aria-components/Input";
 
@@ -42,7 +42,7 @@ const ColorInputGroupRoot = ({
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <ColorInputGroupContext value={contextValue}>
+    <ColorInputGroupContext.Provider value={contextValue}>
       <GroupPrimitive
         className={composeTwRenderProps(className, slots?.base())}
         data-slot="color-input-group"
@@ -50,7 +50,7 @@ const ColorInputGroupRoot = ({
       >
         {(values) => <>{typeof children === "function" ? children(values) : children}</>}
       </GroupPrimitive>
-    </ColorInputGroupContext>
+    </ColorInputGroupContext.Provider>
   );
 };
 
@@ -70,7 +70,7 @@ const ColorInputGroupPrefix = <E extends keyof React.JSX.IntrinsicElements = "di
   ...props
 }: ColorInputGroupPrefixProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof ColorInputGroupPrefixProps<E>>) => {
-  const {slots} = use(ColorInputGroupContext);
+  const {slots} = useContext(ColorInputGroupContext);
 
   return (
     <dom.div
@@ -91,7 +91,7 @@ interface ColorInputGroupInputProps extends InputPrimitiveProps {
 }
 
 const ColorInputGroupInput = ({className, ...props}: ColorInputGroupInputProps) => {
-  const {slots} = use(ColorInputGroupContext);
+  const {slots} = useContext(ColorInputGroupContext);
 
   return (
     <InputPrimitive
@@ -118,7 +118,7 @@ const ColorInputGroupSuffix = <E extends keyof React.JSX.IntrinsicElements = "di
   ...props
 }: ColorInputGroupSuffixProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof ColorInputGroupSuffixProps<E>>) => {
-  const {slots} = use(ColorInputGroupContext);
+  const {slots} = useContext(ColorInputGroupContext);
 
   return (
     <dom.div

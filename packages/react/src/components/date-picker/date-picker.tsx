@@ -8,7 +8,7 @@ import type {DateValue} from "react-aria-components/Calendar";
 
 import {datePickerVariants} from "@heroui/styles";
 import {mergeRefs} from "@react-aria/utils";
-import React, {createContext, use, useEffect, useRef} from "react";
+import React, {createContext, useContext, useEffect, useRef} from "react";
 import {Button as ButtonPrimitive} from "react-aria-components/Button";
 import {
   DatePicker as DatePickerPrimitive,
@@ -82,7 +82,7 @@ const DatePickerRoot = <T extends DateValue>({
   const contextValue = React.useMemo(() => ({slots, triggerRef}), [slots, triggerRef]);
 
   return (
-    <DatePickerContext value={contextValue}>
+    <DatePickerContext.Provider value={contextValue}>
       <DatePickerPrimitive
         data-required={dataAttr(props.isRequired)}
         data-slot="date-picker"
@@ -92,7 +92,7 @@ const DatePickerRoot = <T extends DateValue>({
       >
         {(values) => <>{typeof children === "function" ? children(values) : children}</>}
       </DatePickerPrimitive>
-    </DatePickerContext>
+    </DatePickerContext.Provider>
   );
 };
 
@@ -104,7 +104,7 @@ DatePickerRoot.displayName = "HeroUI.DatePicker";
 interface DatePickerTriggerProps extends ComponentPropsWithRef<typeof ButtonPrimitive> {}
 
 const DatePickerTrigger = ({children, className, ref, ...props}: DatePickerTriggerProps) => {
-  const {slots, triggerRef} = use(DatePickerContext);
+  const {slots, triggerRef} = useContext(DatePickerContext);
 
   const contextRefCallback = React.useCallback(
     (node: HTMLButtonElement | null) => {
@@ -147,7 +147,7 @@ const DatePickerTriggerIndicator = <E extends keyof React.JSX.IntrinsicElements 
   ...props
 }: DatePickerTriggerIndicatorProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof DatePickerTriggerIndicatorProps<E>>) => {
-  const {slots} = use(DatePickerContext);
+  const {slots} = useContext(DatePickerContext);
 
   return (
     <dom.span
@@ -179,10 +179,10 @@ const DatePickerPopover = ({
   placement = "bottom",
   ...props
 }: DatePickerPopoverProps) => {
-  const {slots} = use(DatePickerContext);
+  const {slots} = useContext(DatePickerContext);
 
   return (
-    <SurfaceContext
+    <SurfaceContext.Provider
       value={{
         variant: "default" as SurfaceVariants["variant"],
       }}
@@ -195,7 +195,7 @@ const DatePickerPopover = ({
       >
         {children}
       </PopoverPrimitive>
-    </SurfaceContext>
+    </SurfaceContext.Provider>
   );
 };
 

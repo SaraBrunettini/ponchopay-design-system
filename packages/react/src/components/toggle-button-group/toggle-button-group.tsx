@@ -5,7 +5,7 @@ import type {ToggleButtonGroupVariants, ToggleButtonVariants} from "@heroui/styl
 import type {ComponentPropsWithRef} from "react";
 
 import {toggleButtonGroupVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {useSlottedContext} from "react-aria-components/slots";
 import {
   ToggleButtonGroupContext as RACToggleButtonGroupContext,
@@ -60,7 +60,7 @@ const ToggleButtonGroupRoot = ({
   const contextValue = React.useMemo(() => ({slots, size, isDisabled}), [slots, size, isDisabled]);
 
   return (
-    <ToggleButtonGroupContext value={contextValue}>
+    <ToggleButtonGroupContext.Provider value={contextValue}>
       <ToggleButtonGroupPrimitive
         className={composeTwRenderProps(className, slots.base())}
         data-slot="toggle-button-group"
@@ -70,7 +70,7 @@ const ToggleButtonGroupRoot = ({
       >
         {children}
       </ToggleButtonGroupPrimitive>
-    </ToggleButtonGroupContext>
+    </ToggleButtonGroupContext.Provider>
   );
 };
 
@@ -88,7 +88,7 @@ const ToggleButtonGroupSeparator = <E extends keyof React.JSX.IntrinsicElements 
   ...props
 }: ToggleButtonGroupSeparatorProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof ToggleButtonGroupSeparatorProps<E>>) => {
-  const {slots} = use(ToggleButtonGroupContext);
+  const {slots} = useContext(ToggleButtonGroupContext);
 
   return (
     <dom.span

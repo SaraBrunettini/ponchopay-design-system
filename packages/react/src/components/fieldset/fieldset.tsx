@@ -4,7 +4,7 @@ import type {DOMRenderProps} from "../../utils/dom";
 import type {ReactNode} from "react";
 
 import {fieldsetVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {
   ButtonContext,
   CheckboxGroupContext,
@@ -53,7 +53,7 @@ const FieldsetRoot = <E extends keyof React.JSX.IntrinsicElements = "fieldset">(
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <FieldsetContext value={contextValue}>
+    <FieldsetContext.Provider value={contextValue}>
       <dom.fieldset
         className={slots?.base({className})}
         data-disabled={isDisabled || undefined}
@@ -92,7 +92,7 @@ const FieldsetRoot = <E extends keyof React.JSX.IntrinsicElements = "fieldset">(
           children
         )}
       </dom.fieldset>
-    </FieldsetContext>
+    </FieldsetContext.Provider>
   );
 };
 
@@ -110,7 +110,7 @@ const FieldsetLegend = <E extends keyof React.JSX.IntrinsicElements = "legend">(
   className,
   ...props
 }: FieldsetLegendProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof FieldsetLegendProps<E>>) => {
-  const {slots} = use(FieldsetContext);
+  const {slots} = useContext(FieldsetContext);
 
   return (
     <dom.legend
@@ -135,7 +135,7 @@ const FieldGroup = <E extends keyof React.JSX.IntrinsicElements = "div">({
   className,
   ...rest
 }: FieldGroupProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof FieldGroupProps<E>>) => {
-  const {slots} = use(FieldsetContext);
+  const {slots} = useContext(FieldsetContext);
 
   return (
     <dom.div
@@ -162,7 +162,7 @@ const FieldsetActions = <E extends keyof React.JSX.IntrinsicElements = "div">({
   ...rest
 }: FieldsetActionsProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof FieldsetActionsProps<E>>) => {
-  const {slots} = use(FieldsetContext);
+  const {slots} = useContext(FieldsetContext);
 
   return (
     <dom.div

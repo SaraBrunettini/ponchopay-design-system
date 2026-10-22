@@ -5,7 +5,7 @@ import type {TableVariants} from "@heroui/styles";
 import type {ComponentPropsWithRef, ReactNode} from "react";
 
 import {tableVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {
   Cell as CellPrimitive,
   Collection as CollectionPrimitive,
@@ -53,11 +53,11 @@ const TableRoot = <E extends keyof React.JSX.IntrinsicElements = "div">({
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <TableContext value={contextValue}>
+    <TableContext.Provider value={contextValue}>
       <dom.div className={slots.base({className})} data-slot="table" {...(props as any)}>
         {children}
       </dom.div>
-    </TableContext>
+    </TableContext.Provider>
   );
 };
 
@@ -78,7 +78,7 @@ const TableScrollContainer = <E extends keyof React.JSX.IntrinsicElements = "div
   ...props
 }: TableScrollContainerProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof TableScrollContainerProps<E>>) => {
-  const {slots} = use(TableContext);
+  const {slots} = useContext(TableContext);
 
   return (
     <dom.div
@@ -106,7 +106,7 @@ function TableContent({
   keyboardNavigationBehavior = "tab",
   ...props
 }: TableContentProps) {
-  const {slots} = use(TableContext);
+  const {slots} = useContext(TableContext);
 
   return (
     <TablePrimitive
@@ -128,7 +128,7 @@ interface TableHeaderProps<T extends object> extends ComponentPropsWithRef<
 > {}
 
 function TableHeader<T extends object>({className, ...props}: TableHeaderProps<T>) {
-  const {slots} = use(TableContext);
+  const {slots} = useContext(TableContext);
 
   return (
     <TableHeaderPrimitive
@@ -147,7 +147,7 @@ function TableHeader<T extends object>({className, ...props}: TableHeaderProps<T
 interface TableColumnProps extends ComponentPropsWithRef<typeof ColumnPrimitive> {}
 
 const TableColumn = ({className, ref, ...props}: TableColumnProps) => {
-  const {slots} = use(TableContext);
+  const {slots} = useContext(TableContext);
 
   return (
     <ColumnPrimitive
@@ -169,7 +169,7 @@ interface TableBodyProps<T extends object> extends ComponentPropsWithRef<
 > {}
 
 function TableBody<T extends object>({className, ...props}: TableBodyProps<T>) {
-  const {slots} = use(TableContext);
+  const {slots} = useContext(TableContext);
 
   return (
     <TableBodyPrimitive
@@ -188,7 +188,7 @@ function TableBody<T extends object>({className, ...props}: TableBodyProps<T>) {
 interface TableRowProps<T extends object> extends ComponentPropsWithRef<typeof RowPrimitive<T>> {}
 
 function TableRow<T extends object>({className, ...props}: TableRowProps<T>) {
-  const {slots} = use(TableContext);
+  const {slots} = useContext(TableContext);
 
   return (
     <RowPrimitive
@@ -207,7 +207,7 @@ function TableRow<T extends object>({className, ...props}: TableRowProps<T>) {
 interface TableCellProps extends ComponentPropsWithRef<typeof CellPrimitive> {}
 
 const TableCell = ({className, ref, ...props}: TableCellProps) => {
-  const {slots} = use(TableContext);
+  const {slots} = useContext(TableContext);
 
   return (
     <CellPrimitive
@@ -235,7 +235,7 @@ const TableFooter = <E extends keyof React.JSX.IntrinsicElements = "div">({
   className,
   ...props
 }: TableFooterProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof TableFooterProps<E>>) => {
-  const {slots} = use(TableContext);
+  const {slots} = useContext(TableContext);
 
   return (
     <dom.div
@@ -274,7 +274,7 @@ TableResizableContainer.displayName = "HeroUI.Table.ResizableContainer";
 interface TableColumnResizerProps extends ComponentPropsWithRef<typeof ColumnResizerPrimitive> {}
 
 const TableColumnResizer = ({className, ref, ...props}: TableColumnResizerProps) => {
-  const {slots} = use(TableContext);
+  const {slots} = useContext(TableContext);
 
   return (
     <ColumnResizerPrimitive
@@ -294,7 +294,7 @@ TableColumnResizer.displayName = "HeroUI.Table.ColumnResizer";
 interface TableLoadMoreItemProps extends ComponentPropsWithRef<typeof TableLoadMoreItemPrimitive> {}
 
 const TableLoadMoreItem = ({className, ref, ...props}: TableLoadMoreItemProps) => {
-  const {slots} = use(TableContext);
+  const {slots} = useContext(TableContext);
 
   return (
     <TableLoadMoreItemPrimitive
@@ -323,7 +323,7 @@ const TableLoadMoreContent = <E extends keyof React.JSX.IntrinsicElements = "div
   ...props
 }: TableLoadMoreContentProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof TableLoadMoreContentProps<E>>) => {
-  const {slots} = use(TableContext);
+  const {slots} = useContext(TableContext);
 
   return (
     <dom.div
@@ -374,7 +374,7 @@ const TableSortableColumnHeader = ({
   sortDirection,
   ...props
 }: TableSortableColumnHeaderProps) => {
-  const {slots} = use(TableContext);
+  const {slots} = useContext(TableContext);
 
   const shouldRenderIndicator = showIndicator && !!sortDirection;
 

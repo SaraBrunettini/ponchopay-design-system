@@ -6,7 +6,7 @@ import type {ButtonGroupVariants} from "@heroui/styles";
 import type {ComponentPropsWithRef, ReactNode} from "react";
 
 import {buttonGroupVariants} from "@heroui/styles";
-import React, {Children, createContext, isValidElement, use} from "react";
+import React, {Children, createContext, isValidElement, useContext} from "react";
 import {Group} from "react-aria-components/Group";
 import {useSlottedContext} from "react-aria-components/slots";
 import {ToggleButtonGroupContext as RACToggleButtonGroupContext} from "react-aria-components/ToggleButtonGroup";
@@ -82,7 +82,7 @@ const ButtonGroupRoot = ({
   );
 
   return (
-    <ButtonGroupContext value={context}>
+    <ButtonGroupContext.Provider value={context}>
       <Group
         className={composeTwRenderProps(className, slots.base())}
         data-slot="button-group"
@@ -91,7 +91,7 @@ const ButtonGroupRoot = ({
       >
         {wrappedChildren}
       </Group>
-    </ButtonGroupContext>
+    </ButtonGroupContext.Provider>
   );
 };
 
@@ -110,7 +110,7 @@ const ButtonGroupSeparator = <E extends keyof React.JSX.IntrinsicElements = "spa
   ...props
 }: ButtonGroupSeparatorProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof ButtonGroupSeparatorProps<E>>) => {
-  const {slots} = use(ButtonGroupContext);
+  const {slots} = useContext(ButtonGroupContext);
 
   return (
     <dom.span

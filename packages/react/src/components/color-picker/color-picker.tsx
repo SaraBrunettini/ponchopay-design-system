@@ -6,7 +6,7 @@ import type {ComponentPropsWithRef} from "react";
 import type {ColorPickerProps as ColorPickerPrimitiveProps} from "react-aria-components/ColorPicker";
 
 import {colorPickerVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {Button as ButtonPrimitive} from "react-aria-components/Button";
 import {ColorPicker as ColorPickerPrimitive} from "react-aria-components/ColorPicker";
 import {
@@ -42,7 +42,7 @@ const ColorPickerRoot = ({children, className, ...props}: ColorPickerRootProps) 
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <ColorPickerContext value={contextValue}>
+    <ColorPickerContext.Provider value={contextValue}>
       <ColorPickerPrimitive {...props}>
         <DialogTriggerPrimitive>
           <div className={composeSlotClassName(slots?.base, className)} data-slot="color-picker">
@@ -50,7 +50,7 @@ const ColorPickerRoot = ({children, className, ...props}: ColorPickerRootProps) 
           </div>
         </DialogTriggerPrimitive>
       </ColorPickerPrimitive>
-    </ColorPickerContext>
+    </ColorPickerContext.Provider>
   );
 };
 
@@ -60,7 +60,7 @@ const ColorPickerRoot = ({children, className, ...props}: ColorPickerRootProps) 
 interface ColorPickerTriggerProps extends ComponentPropsWithRef<typeof ButtonPrimitive> {}
 
 const ColorPickerTrigger = ({children, className, ...props}: ColorPickerTriggerProps) => {
-  const {slots} = use(ColorPickerContext);
+  const {slots} = useContext(ColorPickerContext);
 
   return (
     <ButtonPrimitive
@@ -89,10 +89,10 @@ const ColorPickerPopover = ({
   placement = "bottom left",
   ...props
 }: ColorPickerPopoverProps) => {
-  const {slots} = use(ColorPickerContext);
+  const {slots} = useContext(ColorPickerContext);
 
   return (
-    <SurfaceContext
+    <SurfaceContext.Provider
       value={{
         variant: "default" as SurfaceVariants["variant"],
       }}
@@ -105,7 +105,7 @@ const ColorPickerPopover = ({
       >
         {children}
       </PopoverPrimitive>
-    </SurfaceContext>
+    </SurfaceContext.Provider>
   );
 };
 

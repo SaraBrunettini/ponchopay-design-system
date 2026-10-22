@@ -1,6 +1,6 @@
 "use client";
 
-import {createContext, use} from "react";
+import {createContext, useContext} from "react";
 import {TextContext} from "react-aria-components/Text";
 
 /**
@@ -16,9 +16,9 @@ const FieldSlotsGateContext = createContext(false);
  * Inside a gate, `true` only after the collection root's visible Provider mounts.
  */
 const useHasTextSlot = (slot: string): boolean => {
-  const gated = use(FieldSlotsGateContext);
+  const gated = useContext(FieldSlotsGateContext);
 
-  const textContext = use(TextContext) as {
+  const textContext = useContext(TextContext) as {
     slots?: Record<string, unknown>;
   } | null;
 

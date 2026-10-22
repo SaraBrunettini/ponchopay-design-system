@@ -6,7 +6,7 @@ import type {PopoverVariants} from "@heroui/styles";
 import type {ComponentPropsWithRef, ReactNode} from "react";
 
 import {popoverVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {
   Dialog as DialogPrimitive,
   Heading as HeadingPrimitive,
@@ -46,11 +46,11 @@ const PopoverRoot = ({
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <PopoverContext value={contextValue}>
+    <PopoverContext.Provider value={contextValue}>
       <PopoverTriggerPrimitive data-slot="popover-root" {...props}>
         {children}
       </PopoverTriggerPrimitive>
-    </PopoverContext>
+    </PopoverContext.Provider>
   );
 };
 
@@ -63,17 +63,17 @@ interface PopoverContentProps
 }
 
 const PopoverContent = ({children, className, ...props}: PopoverContentProps) => {
-  const {slots} = use(PopoverContext);
+  const {slots} = useContext(PopoverContext);
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <PopoverContext value={contextValue}>
-      <SurfaceContext value={DEFAULT_SURFACE_CONTEXT}>
+    <PopoverContext.Provider value={contextValue}>
+      <SurfaceContext.Provider value={DEFAULT_SURFACE_CONTEXT}>
         <PopoverPrimitive {...props} className={composeTwRenderProps(className, slots?.base())}>
           {children}
         </PopoverPrimitive>
-      </SurfaceContext>
-    </PopoverContext>
+      </SurfaceContext.Provider>
+    </PopoverContext.Provider>
   );
 };
 
@@ -125,7 +125,7 @@ type PopoverDialogProps = Omit<ComponentPropsWithRef<typeof DialogPrimitive>, "c
 };
 
 const PopoverDialog = ({children, className, ...props}: PopoverDialogProps) => {
-  const {slots} = use(PopoverContext);
+  const {slots} = useContext(PopoverContext);
 
   return (
     <DialogPrimitive
@@ -153,7 +153,7 @@ const PopoverTrigger = <E extends keyof React.JSX.IntrinsicElements = "div">({
   className,
   ...props
 }: PopoverTriggerProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof PopoverTriggerProps<E>>) => {
-  const {slots} = use(PopoverContext);
+  const {slots} = useContext(PopoverContext);
 
   return (
     <PressablePrimitive>
@@ -175,7 +175,7 @@ const PopoverTrigger = <E extends keyof React.JSX.IntrinsicElements = "div">({
 type PopoverHeadingProps = ComponentPropsWithRef<typeof HeadingPrimitive> & {};
 
 const PopoverHeading = ({children, className, ...props}: PopoverHeadingProps) => {
-  const {slots} = use(PopoverContext);
+  const {slots} = useContext(PopoverContext);
 
   return (
     <HeadingPrimitive

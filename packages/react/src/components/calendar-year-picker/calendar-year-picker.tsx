@@ -64,7 +64,7 @@ const CalendarYearPickerTriggerContext =
   React.createContext<CalendarYearPickerTriggerContextValue | null>(null);
 
 function useCalendarYearPickerTriggerContext(): CalendarYearPickerTriggerContextValue {
-  const context = React.use(CalendarYearPickerTriggerContext);
+  const context = React.useContext(CalendarYearPickerTriggerContext);
 
   if (!context) {
     throw new Error(
@@ -125,7 +125,7 @@ const CalendarYearPickerTrigger = ({
   );
 
   return (
-    <CalendarYearPickerTriggerContext value={contextValue}>
+    <CalendarYearPickerTriggerContext.Provider value={contextValue}>
       <ButtonPrimitive
         aria-expanded={isYearPickerOpen}
         aria-label={`${monthYear}, year selector`}
@@ -142,7 +142,7 @@ const CalendarYearPickerTrigger = ({
       >
         {typeof children === "function" ? children(values) : children}
       </ButtonPrimitive>
-    </CalendarYearPickerTriggerContext>
+    </CalendarYearPickerTriggerContext.Provider>
   );
 };
 
@@ -256,7 +256,7 @@ const CalendarYearPickerGridContext =
   React.createContext<CalendarYearPickerGridContextValue | null>(null);
 
 function useCalendarYearPickerGridContext(): CalendarYearPickerGridContextValue {
-  const context = React.use(CalendarYearPickerGridContext);
+  const context = React.useContext(CalendarYearPickerGridContext);
 
   if (!context) {
     throw new Error("CalendarYearPicker components must be used within <CalendarYearPicker.Grid>.");
@@ -500,7 +500,7 @@ const CalendarYearPickerGrid = <E extends keyof React.JSX.IntrinsicElements = "d
   );
 
   return (
-    <CalendarYearPickerGridContext value={contextValue}>
+    <CalendarYearPickerGridContext.Provider value={contextValue}>
       <dom.div
         ref={gridRef}
         aria-hidden={!isYearPickerOpen}
@@ -515,7 +515,7 @@ const CalendarYearPickerGrid = <E extends keyof React.JSX.IntrinsicElements = "d
       >
         {children}
       </dom.div>
-    </CalendarYearPickerGridContext>
+    </CalendarYearPickerGridContext.Provider>
   );
 };
 

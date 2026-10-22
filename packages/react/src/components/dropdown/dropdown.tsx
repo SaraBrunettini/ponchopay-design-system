@@ -5,7 +5,7 @@ import type {DropdownVariants} from "@heroui/styles";
 import type {ComponentPropsWithRef} from "react";
 
 import {dropdownVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {Button} from "react-aria-components/Button";
 import {
   Menu as MenuPrimitive,
@@ -41,9 +41,9 @@ const DropdownRoot = ({children, ...props}: DropdownRootProps) => {
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <DropdownContext value={contextValue}>
+    <DropdownContext.Provider value={contextValue}>
       <MenuTriggerPrimitive {...props}>{children}</MenuTriggerPrimitive>
-    </DropdownContext>
+    </DropdownContext.Provider>
   );
 };
 
@@ -53,7 +53,7 @@ const DropdownRoot = ({children, ...props}: DropdownRootProps) => {
 interface DropdownTriggerProps extends ComponentPropsWithRef<typeof Button> {}
 
 const DropdownTrigger = ({children, className, ...props}: DropdownTriggerProps) => {
-  const {slots} = use(DropdownContext);
+  const {slots} = useContext(DropdownContext);
 
   return (
     <Button
@@ -75,10 +75,10 @@ interface DropdownPopoverProps
 }
 
 const DropdownPopover = ({children, className, placement, ...props}: DropdownPopoverProps) => {
-  const {slots} = use(DropdownContext);
+  const {slots} = useContext(DropdownContext);
 
   return (
-    <SurfaceContext
+    <SurfaceContext.Provider
       value={{
         variant: "default" as SurfaceVariants["variant"],
       }}
@@ -91,7 +91,7 @@ const DropdownPopover = ({children, className, placement, ...props}: DropdownPop
       >
         {children}
       </PopoverPrimitive>
-    </SurfaceContext>
+    </SurfaceContext.Provider>
   );
 };
 
@@ -104,7 +104,7 @@ interface DropdownMenuProps<T extends object>
 }
 
 function DropdownMenu<T extends object>({className, ...props}: DropdownMenuProps<T>) {
-  const {slots} = use(DropdownContext);
+  const {slots} = useContext(DropdownContext);
 
   return (
     <MenuPrimitive

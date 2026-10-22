@@ -9,7 +9,7 @@ import type {DateValue} from "react-aria-components/Calendar";
 import {rangeCalendarVariants} from "@heroui/styles";
 import {CalendarDate, DateFormatter, createCalendar} from "@internationalized/date";
 import {useControlledState} from "@react-stately/utils";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {Button as ButtonPrimitive} from "react-aria-components/Button";
 import {useLocale} from "react-aria-components/I18nProvider";
 import {
@@ -79,7 +79,7 @@ const RangeCalendarContextProvider = ({
   );
   const value = React.useMemo<RangeCalendarContext>(() => ({dayView, slots}), [dayView, slots]);
 
-  return <RangeCalendarContext value={value}>{children}</RangeCalendarContext>;
+  return <RangeCalendarContext.Provider value={value}>{children}</RangeCalendarContext.Provider>;
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -154,7 +154,7 @@ function RangeCalendarRoot<T extends DateValue = DateValue>({
   );
 
   return (
-    <YearPickerContext value={yearPickerContext}>
+    <YearPickerContext.Provider value={yearPickerContext}>
       <RangeCalendarPrimitive
         ref={calendarRef}
         data-slot="range-calendar"
@@ -183,7 +183,7 @@ function RangeCalendarRoot<T extends DateValue = DateValue>({
           </RangeCalendarContextProvider>
         )}
       </RangeCalendarPrimitive>
-    </YearPickerContext>
+    </YearPickerContext.Provider>
   );
 }
 
@@ -205,7 +205,7 @@ const RangeCalendarHeader = <E extends keyof React.JSX.IntrinsicElements = "head
   ...props
 }: RangeCalendarHeaderProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof RangeCalendarHeaderProps<E>>) => {
-  const {slots} = use(RangeCalendarContext);
+  const {slots} = useContext(RangeCalendarContext);
 
   return (
     <dom.header
@@ -228,7 +228,7 @@ interface RangeCalendarHeadingProps extends ComponentPropsWithRef<
 > {}
 
 const RangeCalendarHeading = ({className, ...props}: RangeCalendarHeadingProps) => {
-  const {slots} = use(RangeCalendarContext);
+  const {slots} = useContext(RangeCalendarContext);
 
   return (
     <CalendarHeadingPrimitive
@@ -254,7 +254,7 @@ const RangeCalendarNavButton = ({
   slot,
   ...props
 }: RangeCalendarNavButtonProps) => {
-  const {slots} = use(RangeCalendarContext);
+  const {slots} = useContext(RangeCalendarContext);
 
   return (
     <ButtonPrimitive
@@ -292,7 +292,7 @@ const RangeCalendarGrid = ({
   weekdayStyle = "short",
   ...props
 }: RangeCalendarGridProps) => {
-  const rangeCalendarContext = use(RangeCalendarContext);
+  const rangeCalendarContext = useContext(RangeCalendarContext);
   const {dayView, slots} = rangeCalendarContext;
   const contextValue = React.useMemo(
     () => ({
@@ -303,7 +303,7 @@ const RangeCalendarGrid = ({
   );
 
   return (
-    <RangeCalendarContext value={contextValue}>
+    <RangeCalendarContext.Provider value={contextValue}>
       <CalendarGridPrimitive
         data-slot="range-calendar-grid"
         weekdayStyle={weekdayStyle}
@@ -312,7 +312,7 @@ const RangeCalendarGrid = ({
       >
         {children}
       </CalendarGridPrimitive>
-    </RangeCalendarContext>
+    </RangeCalendarContext.Provider>
   );
 };
 
@@ -326,7 +326,7 @@ interface RangeCalendarGridHeaderProps extends ComponentPropsWithRef<
 > {}
 
 const RangeCalendarGridHeader = ({children, className, ...props}: RangeCalendarGridHeaderProps) => {
-  const {dayView, slots} = use(RangeCalendarContext);
+  const {dayView, slots} = useContext(RangeCalendarContext);
 
   if (dayView && dayView.days >= 7 && typeof children === "function") {
     return (
@@ -364,7 +364,7 @@ interface RangeCalendarGridBodyProps extends ComponentPropsWithRef<
 > {}
 
 const RangeCalendarGridBody = ({children, className, ...props}: RangeCalendarGridBodyProps) => {
-  const {dayView, slots} = use(RangeCalendarContext);
+  const {dayView, slots} = useContext(RangeCalendarContext);
 
   if (dayView && dayView.days >= 7 && typeof children === "function") {
     return (
@@ -400,7 +400,7 @@ interface RangeCalendarHeaderCellProps extends ComponentPropsWithRef<
 > {}
 
 const RangeCalendarHeaderCell = ({className, ...props}: RangeCalendarHeaderCellProps) => {
-  const {slots} = use(RangeCalendarContext);
+  const {slots} = useContext(RangeCalendarContext);
 
   return (
     <CalendarHeaderCellPrimitive
@@ -419,7 +419,7 @@ RangeCalendarHeaderCell.displayName = "HeroUI.RangeCalendar.HeaderCell";
 interface RangeCalendarCellProps extends ComponentPropsWithRef<typeof CalendarCellPrimitive> {}
 
 const RangeCalendarCell = ({children, className, ...props}: RangeCalendarCellProps) => {
-  const {slots} = use(RangeCalendarContext);
+  const {slots} = useContext(RangeCalendarContext);
 
   return (
     <CalendarCellPrimitive
@@ -467,7 +467,7 @@ const RangeCalendarCellIndicator = <E extends keyof React.JSX.IntrinsicElements 
   ...props
 }: RangeCalendarCellIndicatorProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof RangeCalendarCellIndicatorProps<E>>) => {
-  const {slots} = use(RangeCalendarContext);
+  const {slots} = useContext(RangeCalendarContext);
 
   return (
     <dom.span

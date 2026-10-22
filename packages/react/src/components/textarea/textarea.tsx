@@ -4,7 +4,7 @@ import type {TextAreaVariants} from "@heroui/styles";
 import type {ComponentPropsWithRef} from "react";
 
 import {textAreaVariants} from "@heroui/styles";
-import React, {use} from "react";
+import React, {useContext} from "react";
 import {TextArea as TextAreaPrimitive} from "react-aria-components/TextArea";
 
 import {composeTwRenderProps} from "../../utils";
@@ -17,7 +17,7 @@ interface TextAreaRootProps
   extends ComponentPropsWithRef<typeof TextAreaPrimitive>, TextAreaVariants {}
 
 const TextAreaRoot = ({className, fullWidth, variant, ...rest}: TextAreaRootProps) => {
-  const textFieldContext = use(TextFieldContext);
+  const textFieldContext = useContext(TextFieldContext);
   const resolvedVariant = variant ?? textFieldContext?.variant;
 
   return (

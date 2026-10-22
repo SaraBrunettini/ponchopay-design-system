@@ -5,7 +5,7 @@ import type {ChipVariants} from "@heroui/styles";
 import type {ReactNode} from "react";
 
 import {chipVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 
 import {composeSlotClassName} from "../../utils/compose";
 import {dom} from "../../utils/dom";
@@ -56,7 +56,7 @@ const ChipRoot = <E extends keyof React.JSX.IntrinsicElements = "span">({
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <ChipContext value={contextValue}>
+    <ChipContext.Provider value={contextValue}>
       <dom.span
         {...(props as any)}
         className={composeSlotClassName(slots.base, className)}
@@ -64,7 +64,7 @@ const ChipRoot = <E extends keyof React.JSX.IntrinsicElements = "span">({
       >
         {chipChildren}
       </dom.span>
-    </ChipContext>
+    </ChipContext.Provider>
   );
 };
 
@@ -83,7 +83,7 @@ const ChipLabel = <E extends keyof React.JSX.IntrinsicElements = "span">({
   className,
   ...props
 }: ChipLabelProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof ChipLabelProps<E>>) => {
-  const {slots} = use(ChipContext);
+  const {slots} = useContext(ChipContext);
 
   return (
     <dom.span

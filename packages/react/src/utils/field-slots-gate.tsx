@@ -9,7 +9,7 @@ import {FieldSlotsGateContext} from "./use-has-text-slot";
  * nested under a CollectionBuilder root (TagGroup, Select, ComboBox, Autocomplete).
  */
 const FieldSlotsGate = ({children}: {children: ReactNode}) => {
-  return <FieldSlotsGateContext value>{children}</FieldSlotsGateContext>;
+  return <FieldSlotsGateContext.Provider value>{children}</FieldSlotsGateContext.Provider>;
 };
 
 export {FieldSlotsGate};

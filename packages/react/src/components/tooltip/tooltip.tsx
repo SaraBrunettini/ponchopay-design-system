@@ -6,7 +6,7 @@ import type {ComponentPropsWithRef, ReactNode} from "react";
 
 import {tooltipVariants} from "@heroui/styles";
 import {mergeProps} from "@react-aria/utils";
-import React, {createContext, use, useRef} from "react";
+import React, {createContext, useContext, useRef} from "react";
 import {useFocusable} from "react-aria/useFocusable";
 import {
   OverlayArrow,
@@ -41,14 +41,14 @@ type TooltipAnimationScopeProps = {
 // `Tooltip` drop `data-entering` / `data-exiting` when one tooltip replaces another. HeroUI drives
 // both phases from CSS keyframes, so the flag is cleared for descendants to keep the fade on swap.
 const TooltipAnimationScope = ({children, shouldSkipAnimation}: TooltipAnimationScopeProps) => {
-  const state = use(TooltipTriggerStateContext);
+  const state = useContext(TooltipTriggerStateContext);
 
   if (!state || shouldSkipAnimation) return children;
 
   return (
-    <TooltipTriggerStateContext value={{...state, shouldSkipAnimation: false}}>
+    <TooltipTriggerStateContext.Provider value={{...state, shouldSkipAnimation: false}}>
       {children}
-    </TooltipTriggerStateContext>
+    </TooltipTriggerStateContext.Provider>
   );
 };
 
@@ -82,7 +82,7 @@ const TooltipRoot = ({
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <TooltipContext value={contextValue}>
+    <TooltipContext.Provider value={contextValue}>
       <TooltipTriggerPrimitive
         closeDelay={resolvedCloseDelay}
         data-slot="tooltip-root"
@@ -93,7 +93,7 @@ const TooltipRoot = ({
           {children}
         </TooltipAnimationScope>
       </TooltipTriggerPrimitive>
-    </TooltipContext>
+    </TooltipContext.Provider>
   );
 };
 
@@ -113,7 +113,7 @@ const TooltipContent = ({
   showArrow = false,
   ...props
 }: TooltipContentProps) => {
-  const {slots} = use(TooltipContext);
+  const {slots} = useContext(TooltipContext);
   const offset = offsetProp ? offsetProp : showArrow ? 7 : 3;
 
   return (
@@ -182,7 +182,7 @@ const TooltipTrigger = <E extends keyof React.JSX.IntrinsicElements = "div">({
   className,
   ...props
 }: TooltipTriggerProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof TooltipTriggerProps<E>>) => {
-  const {slots} = use(TooltipContext);
+  const {slots} = useContext(TooltipContext);
   const triggerRef = useRef<HTMLElement | null>(null);
   // Use the `useFocusable` hook directly rather than the `<Focusable>` wrapper component.
   // Both consume the FocusableContext provided by TooltipTriggerPrimitive's internal

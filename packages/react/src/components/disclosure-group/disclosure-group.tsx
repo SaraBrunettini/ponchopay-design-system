@@ -30,7 +30,7 @@ const DisclosureGroupRoot = ({children, className, ...props}: DisclosureGroupRoo
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <DisclosureGroupContext value={contextValue}>
+    <DisclosureGroupContext.Provider value={contextValue}>
       <DisclosureGroupPrimitive
         data-slot="disclosure-group"
         {...props}
@@ -38,7 +38,7 @@ const DisclosureGroupRoot = ({children, className, ...props}: DisclosureGroupRoo
       >
         {(values) => <>{typeof children === "function" ? children(values) : children}</>}
       </DisclosureGroupPrimitive>
-    </DisclosureGroupContext>
+    </DisclosureGroupContext.Provider>
   );
 };
 

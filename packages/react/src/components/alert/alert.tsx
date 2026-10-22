@@ -6,7 +6,7 @@ import type {AlertVariants} from "@heroui/styles";
 import type {ReactNode} from "react";
 
 import {alertVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 
 import {composeSlotClassName} from "../../utils/compose";
 import {dom} from "../../utils/dom";
@@ -47,13 +47,13 @@ const AlertRoot = <E extends keyof React.JSX.IntrinsicElements = "div">({
   const contextValue = React.useMemo(() => ({slots, status}), [slots, status]);
 
   return (
-    <AlertContext value={contextValue}>
-      <SurfaceContext value={DEFAULT_SURFACE_CONTEXT}>
+    <AlertContext.Provider value={contextValue}>
+      <SurfaceContext.Provider value={DEFAULT_SURFACE_CONTEXT}>
         <dom.div className={slots?.base({className})} data-slot="alert-root" {...(rest as any)}>
           {children}
         </dom.div>
-      </SurfaceContext>
-    </AlertContext>
+      </SurfaceContext.Provider>
+    </AlertContext.Provider>
   );
 };
 
@@ -72,7 +72,7 @@ const AlertIndicator = <E extends keyof React.JSX.IntrinsicElements = "div">({
   className,
   ...rest
 }: AlertIndicatorProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof AlertIndicatorProps<E>>) => {
-  const {slots, status} = use(AlertContext);
+  const {slots, status} = useContext(AlertContext);
 
   // Map status to default icons
   const getDefaultIcon = () => {
@@ -116,7 +116,7 @@ const AlertContent = <E extends keyof React.JSX.IntrinsicElements = "div">({
   className,
   ...rest
 }: AlertContentProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof AlertContentProps<E>>) => {
-  const {slots} = use(AlertContext);
+  const {slots} = useContext(AlertContext);
 
   return (
     <dom.div
@@ -145,7 +145,7 @@ const AlertTitle = <E extends keyof React.JSX.IntrinsicElements = "p">({
   className,
   ...rest
 }: AlertTitleProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof AlertTitleProps<E>>) => {
-  const {slots} = use(AlertContext);
+  const {slots} = useContext(AlertContext);
 
   return (
     <dom.p
@@ -174,7 +174,7 @@ const AlertDescription = <E extends keyof React.JSX.IntrinsicElements = "span">(
   ...rest
 }: AlertDescriptionProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof AlertDescriptionProps<E>>) => {
-  const {slots} = use(AlertContext);
+  const {slots} = useContext(AlertContext);
 
   return (
     <dom.span

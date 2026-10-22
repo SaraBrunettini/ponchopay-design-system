@@ -5,7 +5,7 @@ import type {BadgeVariants} from "@heroui/styles";
 import type {ReactNode} from "react";
 
 import {badgeVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {cx} from "tailwind-variants";
 
 import {composeSlotClassName} from "../../utils/compose";
@@ -89,7 +89,7 @@ const BadgeRoot = <E extends keyof React.JSX.IntrinsicElements = "span">({
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <BadgeContext value={contextValue}>
+    <BadgeContext.Provider value={contextValue}>
       <dom.span
         {...(props as any)}
         className={composeSlotClassName(slots.base, className)}
@@ -97,7 +97,7 @@ const BadgeRoot = <E extends keyof React.JSX.IntrinsicElements = "span">({
       >
         {badgeChildren}
       </dom.span>
-    </BadgeContext>
+    </BadgeContext.Provider>
   );
 };
 
@@ -116,7 +116,7 @@ const BadgeLabel = <E extends keyof React.JSX.IntrinsicElements = "span">({
   className,
   ...props
 }: BadgeLabelProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof BadgeLabelProps<E>>) => {
-  const {slots} = use(BadgeContext);
+  const {slots} = useContext(BadgeContext);
 
   return (
     <dom.span

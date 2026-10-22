@@ -5,7 +5,7 @@ import type {ComponentPropsWithRef, ReactNode} from "react";
 import type {RadioButtonRenderProps, RadioFieldRenderProps} from "react-aria-components/RadioGroup";
 
 import {radioVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {LabelContext} from "react-aria-components/Label";
 import {
   RadioButton as RadioButtonPrimitive,
@@ -42,9 +42,9 @@ const RadioRoot = ({children, className, ...props}: RadioRootProps) => {
       className={composeTwRenderProps(className, slots.base())}
     >
       {(state) => (
-        <RadioContext value={{slots, state}}>
+        <RadioContext.Provider value={{slots, state}}>
           {typeof children === "function" ? children(state) : children}
-        </RadioContext>
+        </RadioContext.Provider>
       )}
     </RadioFieldPrimitive>
   );
@@ -59,7 +59,7 @@ RadioRoot.displayName = "HeroUI.Radio";
 interface RadioContentProps extends ComponentPropsWithRef<typeof RadioButtonPrimitive> {}
 
 const RadioContent = ({children, className, ...props}: RadioContentProps) => {
-  const {slots} = use(RadioContext);
+  const {slots} = useContext(RadioContext);
 
   return (
     <RadioButtonPrimitive
@@ -68,9 +68,9 @@ const RadioContent = ({children, className, ...props}: RadioContentProps) => {
       className={composeTwRenderProps(className, slots?.content())}
     >
       {(state) => (
-        <LabelContext value={LABEL_SPAN_CONTEXT}>
+        <LabelContext.Provider value={LABEL_SPAN_CONTEXT}>
           {typeof children === "function" ? children(state) : children}
-        </LabelContext>
+        </LabelContext.Provider>
       )}
     </RadioButtonPrimitive>
   );
@@ -92,7 +92,7 @@ const RadioControl = <E extends keyof React.JSX.IntrinsicElements = "span">({
   className,
   ...props
 }: RadioControlProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof RadioControlProps<E>>) => {
-  const {slots} = use(RadioContext);
+  const {slots} = useContext(RadioContext);
 
   return (
     <dom.span
@@ -121,7 +121,7 @@ const RadioIndicator = <E extends keyof React.JSX.IntrinsicElements = "span">({
   className,
   ...props
 }: RadioIndicatorProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof RadioIndicatorProps<E>>) => {
-  const {slots, state} = use(RadioContext);
+  const {slots, state} = useContext(RadioContext);
 
   const content =
     typeof children === "function" ? children(state ?? ({} as RadioFieldRenderProps)) : children;

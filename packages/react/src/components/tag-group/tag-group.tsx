@@ -4,7 +4,7 @@ import type {TagVariants} from "../tag";
 import type {ComponentPropsWithRef} from "react";
 
 import {tagGroupVariants} from "@heroui/styles";
-import React, {createContext, use, useMemo} from "react";
+import React, {createContext, useContext, useMemo} from "react";
 import {
   TagGroup as TagGroupPrimitive,
   TagList as TagListPrimitive,
@@ -38,11 +38,11 @@ const TagGroupRoot = ({children, className, size, variant, ...restProps}: TagGro
 
   return (
     <FieldSlotsGate>
-      <TagGroupContext value={contextValue}>
+      <TagGroupContext.Provider value={contextValue}>
         <TagGroupPrimitive className={slots.base({className})} data-slot="tag-group" {...restProps}>
           {children}
         </TagGroupPrimitive>
-      </TagGroupContext>
+      </TagGroupContext.Provider>
     </FieldSlotsGate>
   );
 };
@@ -57,7 +57,7 @@ const TagGroupList = <T extends object>({
   className,
   ...restProps
 }: TagGroupListProps<T>) => {
-  const {slots} = use(TagGroupContext);
+  const {slots} = useContext(TagGroupContext);
 
   return (
     <TagListPrimitive

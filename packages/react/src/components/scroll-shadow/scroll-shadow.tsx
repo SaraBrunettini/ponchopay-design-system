@@ -5,7 +5,7 @@ import type {RefObject} from "react";
 
 import {scrollShadowVariants} from "@heroui/styles";
 import {mergeRefs} from "@react-aria/utils";
-import {useMemo, useRef} from "react";
+import {forwardRef, useMemo, useRef} from "react";
 
 import {useSafeLayoutEffect} from "../../hooks/use-safe-layout-effect";
 
@@ -45,88 +45,93 @@ export interface ScrollShadowRootProps
   onVisibilityChange?: (visibility: ScrollShadowVisibility) => void;
 }
 
-export const ScrollShadowRoot = ({
-  children,
-  className,
-  hideScrollBar = false,
-  isEnabled = true,
-  offset = 0,
-  onVisibilityChange,
-  orientation = "vertical",
-  ref,
-  size = 40,
-  style: styleProp,
-  variant = "fade",
-  visibility = "auto",
-  ...props
-}: ScrollShadowRootProps) => {
-  const internalRef = useRef<HTMLDivElement | null>(null);
+// forwardRef (not ref-as-prop) so Tabs' internal scroller ref also reaches the DOM on React 18.
+export const ScrollShadowRoot = forwardRef<HTMLDivElement, Omit<ScrollShadowRootProps, "ref">>(
+  (
+    {
+      children,
+      className,
+      hideScrollBar = false,
+      isEnabled = true,
+      offset = 0,
+      onVisibilityChange,
+      orientation = "vertical",
+      size = 40,
+      style: styleProp,
+      variant = "fade",
+      visibility = "auto",
+      ...props
+    },
+    ref,
+  ) => {
+    const internalRef = useRef<HTMLDivElement | null>(null);
 
-  useScrollShadow({
-    containerRef: internalRef as RefObject<HTMLElement>,
-    isEnabled,
-    offset,
-    onVisibilityChange,
-    orientation,
-    visibility,
-  });
+    useScrollShadow({
+      containerRef: internalRef as RefObject<HTMLElement>,
+      isEnabled,
+      offset,
+      onVisibilityChange,
+      orientation,
+      visibility,
+    });
 
-  // Handle controlled visibility mode
-  useSafeLayoutEffect(() => {
-    const el = internalRef.current;
+    // Handle controlled visibility mode
+    useSafeLayoutEffect(() => {
+      const el = internalRef.current;
 
-    if (!el || visibility === "auto") return;
+      if (!el || visibility === "auto") return;
 
-    // Clear all data attributes
-    delete el.dataset["topScroll"];
-    delete el.dataset["bottomScroll"];
-    delete el.dataset["topBottomScroll"];
-    delete el.dataset["leftScroll"];
-    delete el.dataset["rightScroll"];
-    delete el.dataset["leftRightScroll"];
+      // Clear all data attributes
+      delete el.dataset["topScroll"];
+      delete el.dataset["bottomScroll"];
+      delete el.dataset["topBottomScroll"];
+      delete el.dataset["leftScroll"];
+      delete el.dataset["rightScroll"];
+      delete el.dataset["leftRightScroll"];
 
-    // Set controlled visibility
-    if (visibility === "both") {
-      el.dataset[orientation === "vertical" ? "topBottomScroll" : "leftRightScroll"] = "true";
-    } else if (visibility !== "none") {
-      el.dataset[`${visibility}Scroll`] = "true";
-    }
-  }, [visibility, orientation]);
+      // Set controlled visibility
+      if (visibility === "both") {
+        el.dataset[orientation === "vertical" ? "topBottomScroll" : "leftRightScroll"] = "true";
+      } else if (visibility !== "none") {
+        el.dataset[`${visibility}Scroll`] = "true";
+      }
+    }, [visibility, orientation]);
 
-  const slots = useMemo(
-    () =>
-      scrollShadowVariants({
-        hideScrollBar,
-        orientation,
-        variant,
-      }),
-    [orientation, hideScrollBar, variant],
-  );
+    const slots = useMemo(
+      () =>
+        scrollShadowVariants({
+          hideScrollBar,
+          orientation,
+          variant,
+        }),
+      [orientation, hideScrollBar, variant],
+    );
 
-  const style = {
-    "--scroll-shadow-size": `${size}px`,
-    "--scroll-shadow-offset": `${offset}px`,
-    ...styleProp,
-  } as React.CSSProperties;
+    const style = {
+      "--scroll-shadow-size": `${size}px`,
+      "--scroll-shadow-offset": `${offset}px`,
+      ...styleProp,
+    } as React.CSSProperties;
 
-  const mergedRef = useMemo(() => mergeRefs(internalRef, ref), [internalRef, ref]);
+    const mergedRef = useMemo(() => mergeRefs(internalRef, ref), [internalRef, ref]);
 
-  return (
-    <div
-      ref={mergedRef}
-      className={slots.base({className})}
-      data-orientation={orientation}
-      // Selects the scroll-driven fade where supported. Controlled and disabled modes stay
-      // attribute-driven, matching what the hook does for the same combination of props.
-      data-scroll-shadow-mode={isEnabled && visibility === "auto" ? "auto" : "manual"}
-      data-scroll-shadow-size={size}
-      data-slot="scroll-shadow"
-      style={style}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-};
+    return (
+      <div
+        ref={mergedRef}
+        className={slots.base({className})}
+        data-orientation={orientation}
+        // Selects the scroll-driven fade where supported. Controlled and disabled modes stay
+        // attribute-driven, matching what the hook does for the same combination of props.
+        data-scroll-shadow-mode={isEnabled && visibility === "auto" ? "auto" : "manual"}
+        data-scroll-shadow-size={size}
+        data-slot="scroll-shadow"
+        style={style}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  },
+);
 
 ScrollShadowRoot.displayName = "HeroUI.ScrollShadow";

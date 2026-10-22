@@ -8,7 +8,7 @@ import type {KeyboardEvent as AriaKeyboardEvent} from "@react-types/shared";
 import type {ComponentPropsWithRef, ReactNode} from "react";
 
 import {selectVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {Button as ButtonPrimitive} from "react-aria-components/Button";
 import {Popover as PopoverPrimitive} from "react-aria-components/Popover";
 import {
@@ -99,7 +99,7 @@ const SelectRoot = <T extends object = object, M extends "single" | "multiple" =
 
   return (
     <FieldSlotsGate>
-      <SelectContext value={context}>
+      <SelectContext.Provider value={context}>
         <SelectPrimitive
           data-slot="select"
           {...props}
@@ -108,7 +108,7 @@ const SelectRoot = <T extends object = object, M extends "single" | "multiple" =
         >
           {(values) => <>{typeof children === "function" ? children(values) : children}</>}
         </SelectPrimitive>
-      </SelectContext>
+      </SelectContext.Provider>
     </FieldSlotsGate>
   );
 };
@@ -119,8 +119,8 @@ const SelectRoot = <T extends object = object, M extends "single" | "multiple" =
 interface SelectTriggerProps extends ComponentPropsWithRef<typeof ButtonPrimitive> {}
 
 const SelectTrigger = ({children, className, onKeyDown, ...props}: SelectTriggerProps) => {
-  const {hasClearButton, onClear, slots} = use(SelectContext);
-  const state = use(SelectStateContext);
+  const {hasClearButton, onClear, slots} = useContext(SelectContext);
+  const state = useContext(SelectStateContext);
 
   // ARIA treats the children of a button as presentational, so Select.ClearButton can
   // never take focus. This shortcut is the only pointer-free way to clear, and it is
@@ -151,9 +151,9 @@ const SelectTrigger = ({children, className, onKeyDown, ...props}: SelectTrigger
       onKeyDown={handleKeyDown}
     >
       {(values) => (
-        <SelectTriggerContext value={{isDisabled: values.isDisabled}}>
+        <SelectTriggerContext.Provider value={{isDisabled: values.isDisabled}}>
           {typeof children === "function" ? children(values) : children}
-        </SelectTriggerContext>
+        </SelectTriggerContext.Provider>
       )}
     </ButtonPrimitive>
   );
@@ -165,7 +165,7 @@ const SelectTrigger = ({children, className, onKeyDown, ...props}: SelectTrigger
 interface SelectValueProps extends ComponentPropsWithRef<typeof SelectValuePrimitive> {}
 
 const SelectValue = ({children, className, ...props}: SelectValueProps) => {
-  const {slots} = use(SelectContext);
+  const {slots} = useContext(SelectContext);
 
   return (
     <SelectValuePrimitive
@@ -194,8 +194,8 @@ const SelectIndicator = <E extends keyof React.JSX.IntrinsicElements = "svg">({
   ...props
 }: SelectIndicatorProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof SelectIndicatorProps<E>>) => {
-  const {slots} = use(SelectContext);
-  const state = use(SelectStateContext);
+  const {slots} = useContext(SelectContext);
+  const state = useContext(SelectStateContext);
 
   if (children && React.isValidElement(children)) {
     return React.cloneElement(
@@ -241,9 +241,9 @@ const SelectClearButton = <E extends keyof React.JSX.IntrinsicElements = "span">
   ...props
 }: SelectClearButtonProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof SelectClearButtonProps<E>>) => {
-  const {isDisabled: rootDisabled, onClear, registerClearButton, slots} = use(SelectContext);
-  const {isDisabled: triggerDisabled} = use(SelectTriggerContext);
-  const state = use(SelectStateContext);
+  const {isDisabled: rootDisabled, onClear, registerClearButton, slots} = useContext(SelectContext);
+  const {isDisabled: triggerDisabled} = useContext(SelectTriggerContext);
+  const state = useContext(SelectStateContext);
 
   const isDisabled = triggerDisabled ?? rootDisabled ?? false;
   const isEmpty = isSelectionEmpty(state);
@@ -305,10 +305,10 @@ const SelectPopover = ({
   placement = "bottom",
   ...props
 }: SelectPopoverProps) => {
-  const {slots} = use(SelectContext);
+  const {slots} = useContext(SelectContext);
 
   return (
-    <SurfaceContext
+    <SurfaceContext.Provider
       value={{
         variant: "default" as SurfaceVariants["variant"],
       }}
@@ -321,7 +321,7 @@ const SelectPopover = ({
       >
         {children}
       </PopoverPrimitive>
-    </SurfaceContext>
+    </SurfaceContext.Provider>
   );
 };
 

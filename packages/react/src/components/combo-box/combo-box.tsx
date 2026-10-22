@@ -8,7 +8,7 @@ import type {ButtonProps} from "react-aria-components/Button";
 import type {ComboBoxValueRenderProps} from "react-aria-components/ComboBox";
 
 import {comboBoxVariants} from "@heroui/styles";
-import React, {Children, createContext, isValidElement, use} from "react";
+import React, {Children, createContext, isValidElement, useContext} from "react";
 import {useIsHidden} from "react-aria/private/collections/Hidden";
 import {Button} from "react-aria-components/Button";
 import {
@@ -76,7 +76,7 @@ const ComboBoxRoot = <T extends object = object, M extends "single" | "multiple"
 
   return (
     <FieldSlotsGate>
-      <ComboBoxContext value={contextValue}>
+      <ComboBoxContext.Provider value={contextValue}>
         <ComboBoxPrimitive
           data-slot="combo-box"
           menuTrigger={menuTrigger}
@@ -85,7 +85,7 @@ const ComboBoxRoot = <T extends object = object, M extends "single" | "multiple"
         >
           {(values) => <>{typeof children === "function" ? children(values) : children}</>}
         </ComboBoxPrimitive>
-      </ComboBoxContext>
+      </ComboBoxContext.Provider>
     </FieldSlotsGate>
   );
 };
@@ -142,7 +142,7 @@ const ComboBoxValue = <T extends object = object>({
   className,
   ...props
 }: ComboBoxValueProps<T>) => {
-  const {slots} = use(ComboBoxContext);
+  const {slots} = useContext(ComboBoxContext);
 
   return (
     <ComboBoxValuePrimitive
@@ -164,8 +164,8 @@ interface ComboBoxTriggerProps extends ButtonProps {
 }
 
 const ComboBoxTrigger = ({children, className, ...props}: ComboBoxTriggerProps) => {
-  const {slots} = use(ComboBoxContext);
-  const state = use(ComboBoxStateContext);
+  const {slots} = useContext(ComboBoxContext);
+  const state = useContext(ComboBoxStateContext);
   const isHidden = useIsHidden();
   const [inputGroupProps, restProps] = inputGroupSlot.useSlot(props);
 
@@ -246,10 +246,10 @@ const ComboBoxPopover = ({
   placement = "bottom",
   ...props
 }: ComboBoxPopoverProps) => {
-  const {slots} = use(ComboBoxContext);
+  const {slots} = useContext(ComboBoxContext);
 
   return (
-    <SurfaceContext
+    <SurfaceContext.Provider
       value={{
         variant: "default" as SurfaceVariants["variant"],
       }}
@@ -262,7 +262,7 @@ const ComboBoxPopover = ({
       >
         {children}
       </PopoverPrimitive>
-    </SurfaceContext>
+    </SurfaceContext.Provider>
   );
 };
 

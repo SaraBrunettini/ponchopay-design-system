@@ -39,7 +39,7 @@ const SurfaceRoot = <E extends keyof React.JSX.IntrinsicElements = "div">({
   const contextValue = React.useMemo(() => ({variant}), [variant]);
 
   return (
-    <SurfaceContext value={contextValue}>
+    <SurfaceContext.Provider value={contextValue}>
       <dom.div
         className={surfaceVariants({variant, className})}
         data-slot="surface"
@@ -47,7 +47,7 @@ const SurfaceRoot = <E extends keyof React.JSX.IntrinsicElements = "div">({
       >
         {children}
       </dom.div>
-    </SurfaceContext>
+    </SurfaceContext.Provider>
   );
 };
 

@@ -6,7 +6,7 @@ import type {ComponentPropsWithRef, ReactNode} from "react";
 import type {SwitchButtonRenderProps, SwitchFieldRenderProps} from "react-aria-components/Switch";
 
 import {switchVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {LabelContext} from "react-aria-components/Label";
 import {
   SwitchButton as SwitchButtonPrimitive,
@@ -41,9 +41,9 @@ const SwitchRoot = ({children, className, size, ...props}: SwitchRootProps) => {
       className={composeTwRenderProps(className, slots.base())}
     >
       {(state) => (
-        <SwitchContext value={{slots, state}}>
+        <SwitchContext.Provider value={{slots, state}}>
           {typeof children === "function" ? children(state) : children}
-        </SwitchContext>
+        </SwitchContext.Provider>
       )}
     </SwitchFieldPrimitive>
   );
@@ -58,7 +58,7 @@ SwitchRoot.displayName = "HeroUI.Switch";
 interface SwitchContentProps extends ComponentPropsWithRef<typeof SwitchButtonPrimitive> {}
 
 const SwitchContent = ({children, className, ...props}: SwitchContentProps) => {
-  const {slots} = use(SwitchContext);
+  const {slots} = useContext(SwitchContext);
 
   return (
     <SwitchButtonPrimitive
@@ -67,9 +67,9 @@ const SwitchContent = ({children, className, ...props}: SwitchContentProps) => {
       className={composeTwRenderProps(className, slots?.content())}
     >
       {(state) => (
-        <LabelContext value={LABEL_SPAN_CONTEXT}>
+        <LabelContext.Provider value={LABEL_SPAN_CONTEXT}>
           {typeof children === "function" ? children(state) : children}
-        </LabelContext>
+        </LabelContext.Provider>
       )}
     </SwitchButtonPrimitive>
   );
@@ -91,7 +91,7 @@ const SwitchControl = <E extends keyof React.JSX.IntrinsicElements = "span">({
   className,
   ...props
 }: SwitchControlProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof SwitchControlProps<E>>) => {
-  const {slots} = use(SwitchContext);
+  const {slots} = useContext(SwitchContext);
 
   return (
     <dom.span
@@ -120,7 +120,7 @@ const SwitchThumb = <E extends keyof React.JSX.IntrinsicElements = "span">({
   className,
   ...props
 }: SwitchThumbProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof SwitchThumbProps<E>>) => {
-  const {slots} = use(SwitchContext);
+  const {slots} = useContext(SwitchContext);
 
   return (
     <dom.span
@@ -149,7 +149,7 @@ const SwitchIcon = <E extends keyof React.JSX.IntrinsicElements = "span">({
   className,
   ...props
 }: SwitchIconProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof SwitchIconProps<E>>) => {
-  const {slots} = use(SwitchContext);
+  const {slots} = useContext(SwitchContext);
 
   return (
     <dom.span

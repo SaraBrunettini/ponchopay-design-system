@@ -6,7 +6,7 @@ import type {ComponentPropsWithRef, ReactNode} from "react";
 import type {ProgressBarRenderProps} from "react-aria-components/ProgressBar";
 
 import {progressBarVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {ProgressBar as ProgressBarPrimitive} from "react-aria-components/ProgressBar";
 
 import {composeSlotClassName, composeTwRenderProps} from "../../utils/compose";
@@ -38,9 +38,9 @@ const ProgressBarRoot = ({children, className, color, size, ...props}: ProgressB
       className={composeTwRenderProps(className, slots.base())}
     >
       {(values) => (
-        <ProgressBarContext value={{slots, state: values}}>
+        <ProgressBarContext.Provider value={{slots, state: values}}>
           {typeof children === "function" ? children(values) : children}
-        </ProgressBarContext>
+        </ProgressBarContext.Provider>
       )}
     </ProgressBarPrimitive>
   );
@@ -64,7 +64,7 @@ const ProgressBarOutput = <E extends keyof React.JSX.IntrinsicElements = "span">
   ...props
 }: ProgressBarOutputProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof ProgressBarOutputProps<E>>) => {
-  const {slots, state} = use(ProgressBarContext);
+  const {slots, state} = useContext(ProgressBarContext);
 
   return (
     <dom.span
@@ -95,7 +95,7 @@ const ProgressBarTrack = <E extends keyof React.JSX.IntrinsicElements = "div">({
   ...props
 }: ProgressBarTrackProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof ProgressBarTrackProps<E>>) => {
-  const {slots} = use(ProgressBarContext);
+  const {slots} = useContext(ProgressBarContext);
 
   return (
     <dom.div
@@ -127,7 +127,7 @@ const ProgressBarFill = <E extends keyof React.JSX.IntrinsicElements = "div">({
   ...props
 }: ProgressBarFillProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof ProgressBarFillProps<E>>) => {
-  const {slots, state} = use(ProgressBarContext);
+  const {slots, state} = useContext(ProgressBarContext);
 
   return (
     <dom.div

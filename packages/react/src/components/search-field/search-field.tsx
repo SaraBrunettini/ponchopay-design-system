@@ -5,7 +5,7 @@ import type {SearchFieldVariants} from "@heroui/styles";
 import type {ComponentPropsWithRef} from "react";
 
 import {searchFieldVariants} from "@heroui/styles";
-import React, {createContext, use} from "react";
+import React, {createContext, useContext} from "react";
 import {Group as GroupPrimitive} from "react-aria-components/Group";
 import {Input as InputPrimitive} from "react-aria-components/Input";
 import {SearchField as SearchFieldPrimitive} from "react-aria-components/SearchField";
@@ -43,7 +43,7 @@ const SearchFieldRoot = ({
   const contextValue = React.useMemo(() => ({slots}), [slots]);
 
   return (
-    <SearchFieldContext value={contextValue}>
+    <SearchFieldContext.Provider value={contextValue}>
       <SearchFieldPrimitive
         data-slot="search-field"
         {...props}
@@ -51,7 +51,7 @@ const SearchFieldRoot = ({
       >
         {(values) => <>{typeof children === "function" ? children(values) : children}</>}
       </SearchFieldPrimitive>
-    </SearchFieldContext>
+    </SearchFieldContext.Provider>
   );
 };
 
@@ -61,7 +61,7 @@ const SearchFieldRoot = ({
 interface SearchFieldGroupProps extends ComponentPropsWithRef<typeof GroupPrimitive> {}
 
 const SearchFieldGroup = ({children, className, ...props}: SearchFieldGroupProps) => {
-  const {slots} = use(SearchFieldContext);
+  const {slots} = useContext(SearchFieldContext);
 
   return (
     <GroupPrimitive
@@ -80,7 +80,7 @@ const SearchFieldGroup = ({children, className, ...props}: SearchFieldGroupProps
 interface SearchFieldInputProps extends ComponentPropsWithRef<typeof InputPrimitive> {}
 
 const SearchFieldInput = ({className, ...props}: SearchFieldInputProps) => {
-  const {slots} = use(SearchFieldContext);
+  const {slots} = useContext(SearchFieldContext);
 
   return (
     <InputPrimitive
@@ -107,7 +107,7 @@ const SearchFieldSearchIcon = <E extends keyof React.JSX.IntrinsicElements = "sv
   ...props
 }: SearchFieldSearchIconProps<E> &
   Omit<React.JSX.IntrinsicElements[E], keyof SearchFieldSearchIconProps<E>>) => {
-  const {slots} = use(SearchFieldContext);
+  const {slots} = useContext(SearchFieldContext);
 
   if (children && React.isValidElement(children)) {
     return React.cloneElement(
@@ -138,7 +138,7 @@ const SearchFieldSearchIcon = <E extends keyof React.JSX.IntrinsicElements = "sv
 interface SearchFieldClearButtonProps extends ComponentPropsWithRef<typeof CloseButton> {}
 
 const SearchFieldClearButton = ({className, ...props}: SearchFieldClearButtonProps) => {
-  const {slots} = use(SearchFieldContext);
+  const {slots} = useContext(SearchFieldContext);
 
   return (
     <CloseButton

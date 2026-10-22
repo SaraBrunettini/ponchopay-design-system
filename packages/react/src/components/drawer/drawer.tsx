@@ -10,7 +10,7 @@ import type {DialogProps as DialogPrimitiveProps} from "react-aria-components/Di
 
 import {drawerVariants} from "@heroui/styles";
 import {mergeProps} from "@react-aria/utils";
-import React, {createContext, use, useCallback, useMemo, useRef} from "react";
+import React, {createContext, useCallback, useContext, useMemo, useRef} from "react";
 import {Button as ButtonPrimitive} from "react-aria-components/Button";
 import {
   Dialog as DialogPrimitive,
@@ -45,7 +45,7 @@ const DISMISS_FRACTION = 0.3; // dismiss if dragged > 30% of dimension
 const VELOCITY_THRESHOLD = 0.5; // px/ms — dismiss on fast flick
 
 function useDrawerDrag(placement: DrawerPlacement | undefined, isDismissable: boolean) {
-  const overlayState = use(OverlayTriggerStateContext);
+  const overlayState = useContext(OverlayTriggerStateContext);
   const dialogRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const isActive = useRef(false);
@@ -238,11 +238,11 @@ const DrawerRoot = ({children, state, ...props}: DrawerRootProps) => {
   );
 
   return (
-    <DrawerContext value={drawerContext}>
+    <DrawerContext.Provider value={drawerContext}>
       <DrawerTriggerPrimitive data-slot="drawer-root" {...mergeProps(props, controlledProps)}>
         {children}
       </DrawerTriggerPrimitive>
-    </DrawerContext>
+    </DrawerContext.Provider>
   );
 };
 
@@ -254,7 +254,7 @@ DrawerRoot.displayName = "HeroUI.Drawer";
 interface DrawerTriggerProps extends ComponentPropsWithRef<typeof ButtonPrimitive> {}
 
 const DrawerTrigger = ({children, className, ...props}: DrawerTriggerProps) => {
-  const {slots} = use(DrawerContext);
+  const {slots} = useContext(DrawerContext);
 
   return (
     <ButtonPrimitive
@@ -288,7 +288,7 @@ const DrawerBackdrop = ({
   variant,
   ...props
 }: DrawerBackdropProps) => {
-  const {slots: contextSlots} = use(DrawerContext);
+  const {slots: contextSlots} = useContext(DrawerContext);
 
   const updatedSlots = useMemo(() => drawerVariants({variant}), [variant]);
 
@@ -305,9 +305,9 @@ const DrawerBackdrop = ({
       {...props}
     >
       {(renderProps) => (
-        <DrawerContext value={updatedDrawerContext}>
+        <DrawerContext.Provider value={updatedDrawerContext}>
           {typeof children === "function" ? children(renderProps) : children}
-        </DrawerContext>
+        </DrawerContext.Provider>
       )}
     </ModalOverlayPrimitive>
   );
@@ -331,7 +331,7 @@ const DrawerContent = ({
   placement = "bottom",
   ...props
 }: DrawerContentProps) => {
-  const {isDismissable, slots: contextSlots} = use(DrawerContext);
+  const {isDismissable, slots: contextSlots} = useContext(DrawerContext);
 
   const updatedSlots = useMemo(() => drawerVariants({placement}), [placement]);
 
@@ -348,9 +348,9 @@ const DrawerContent = ({
       {...props}
     >
       {(renderProps) => (
-        <DrawerContext value={updatedDrawerContext}>
+        <DrawerContext.Provider value={updatedDrawerContext}>
           {typeof children === "function" ? children(renderProps) : children}
-        </DrawerContext>
+        </DrawerContext.Provider>
       )}
     </ModalPrimitive>
   );
@@ -364,11 +364,11 @@ DrawerContent.displayName = "HeroUI.Drawer.Content";
 interface DrawerDialogProps extends DialogPrimitiveProps {}
 
 const DrawerDialog = ({children, className, ...props}: DrawerDialogProps) => {
-  const {isDismissable = true, placement, slots} = use(DrawerContext);
+  const {isDismissable = true, placement, slots} = useContext(DrawerContext);
   const {dialogRef, dragHandlers} = useDrawerDrag(placement, isDismissable);
 
   return (
-    <SurfaceContext value={DEFAULT_SURFACE_CONTEXT}>
+    <SurfaceContext.Provider value={DEFAULT_SURFACE_CONTEXT}>
       <DialogPrimitive
         ref={dialogRef}
         className={composeSlotClassName(slots?.dialog, className)}
@@ -380,7 +380,7 @@ const DrawerDialog = ({children, className, ...props}: DrawerDialogProps) => {
       >
         {children}
       </DialogPrimitive>
-    </SurfaceContext>
+    </SurfaceContext.Provider>
   );
 };
 
@@ -401,7 +401,7 @@ const DrawerHeader = <E extends keyof React.JSX.IntrinsicElements = "div">({
   className,
   ...props
 }: DrawerHeaderProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof DrawerHeaderProps<E>>) => {
-  const {slots} = use(DrawerContext);
+  const {slots} = useContext(DrawerContext);
 
   return (
     <dom.div
@@ -431,7 +431,7 @@ const DrawerBody = <E extends keyof React.JSX.IntrinsicElements = "div">({
   className,
   ...props
 }: DrawerBodyProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof DrawerBodyProps<E>>) => {
-  const {slots} = use(DrawerContext);
+  const {slots} = useContext(DrawerContext);
 
   return (
     <dom.div
@@ -462,7 +462,7 @@ const DrawerFooter = <E extends keyof React.JSX.IntrinsicElements = "div">({
   className,
   ...props
 }: DrawerFooterProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof DrawerFooterProps<E>>) => {
-  const {slots} = use(DrawerContext);
+  const {slots} = useContext(DrawerContext);
 
   return (
     <dom.div
@@ -483,7 +483,7 @@ DrawerFooter.displayName = "HeroUI.Drawer.Footer";
 interface DrawerHeadingProps extends ComponentPropsWithRef<typeof HeadingPrimitive> {}
 
 const DrawerHeading = ({children, className, ...props}: DrawerHeadingProps) => {
-  const {slots} = use(DrawerContext);
+  const {slots} = useContext(DrawerContext);
 
   return (
     <HeadingPrimitive
@@ -513,7 +513,7 @@ const DrawerHandle = <E extends keyof React.JSX.IntrinsicElements = "div">({
   className,
   ...props
 }: DrawerHandleProps<E> & Omit<React.JSX.IntrinsicElements[E], keyof DrawerHandleProps<E>>) => {
-  const {slots} = use(DrawerContext);
+  const {slots} = useContext(DrawerContext);
 
   return (
     <dom.div
@@ -538,7 +538,7 @@ interface DrawerCloseTriggerProps extends ButtonPrimitiveProps {
 }
 
 const DrawerCloseTrigger = ({className, ...rest}: DrawerCloseTriggerProps) => {
-  const {slots} = use(DrawerContext);
+  const {slots} = useContext(DrawerContext);
 
   return (
     <CloseButton
