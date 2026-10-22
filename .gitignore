@@ -94,3 +94,12 @@ apps/docs/public/skills
 
 # SEO analysis output
 .seo-output
+
+# design-sync
+.design-sync/sb-reference/
+.design-sync/learnings/
+.design-sync/.cache/
+.design-sync/node_modules
+.design-sync/*.log
+.ds-sync/
+ds-bundle/

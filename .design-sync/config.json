@@ -1,0 +1,157 @@
+{
+  "projectId": "e9e252ba-e30a-462d-b837-5304dac0a452",
+  "shape": "storybook",
+  "storybookConfigDir": "packages/storybook/.storybook",
+  "storybookStatic": ".design-sync/sb-reference",
+  "pkg": "@heroui/react",
+  "globalName": "HeroUI",
+  "buildCmd": "pnpm -F \"@heroui/react...\" build",
+  "titleMap": {
+    "Color System": null,
+    "Components Demo": null,
+    "Colors Demo": null,
+    "Textarea": "TextArea"
+  },
+  "docsDir": "../../apps/docs/content/docs/en/react/components",
+  "overrides": {
+    "Button": {
+      "cardMode": "column"
+    },
+    "ButtonGroup": {
+      "cardMode": "column"
+    },
+    "ToggleButtonGroup": {
+      "cardMode": "column"
+    },
+    "Dropdown": {
+      "cardMode": "column"
+    },
+    "TagGroup": {
+      "cardMode": "column"
+    },
+    "ColorField": {
+      "cardMode": "column"
+    },
+    "ColorSlider": {
+      "cardMode": "column"
+    },
+    "Slider": {
+      "cardMode": "column"
+    },
+    "Switch": {
+      "cardMode": "column"
+    },
+    "Badge": {
+      "cardMode": "column"
+    },
+    "Chip": {
+      "cardMode": "column"
+    },
+    "Table": {
+      "cardMode": "column"
+    },
+    "DateField": {
+      "cardMode": "column"
+    },
+    "TimeField": {
+      "cardMode": "column"
+    },
+    "Meter": {
+      "cardMode": "column"
+    },
+    "ProgressBar": {
+      "cardMode": "column"
+    },
+    "Skeleton": {
+      "cardMode": "column"
+    },
+    "Spinner": {
+      "cardMode": "column"
+    },
+    "Toast": {
+      "cardMode": "column"
+    },
+    "Input": {
+      "cardMode": "column"
+    },
+    "InputGroup": {
+      "cardMode": "column"
+    },
+    "NumberField": {
+      "cardMode": "column"
+    },
+    "SearchField": {
+      "cardMode": "column"
+    },
+    "TextArea": {
+      "cardMode": "column"
+    },
+    "TextField": {
+      "cardMode": "column"
+    },
+    "Card": {
+      "cardMode": "column"
+    },
+    "Toolbar": {
+      "cardMode": "column"
+    },
+    "Avatar": {
+      "cardMode": "column"
+    },
+    "AvatarGroup": {
+      "cardMode": "column"
+    },
+    "Accordion": {
+      "cardMode": "column"
+    },
+    "DisclosureGroup": {
+      "cardMode": "column"
+    },
+    "Pagination": {
+      "cardMode": "column"
+    },
+    "Tabs": {
+      "cardMode": "column"
+    },
+    "Popover": {
+      "cardMode": "column"
+    },
+    "Autocomplete": {
+      "cardMode": "single",
+      "primaryStory": "Default"
+    },
+    "ComboBox": {
+      "cardMode": "column"
+    },
+    "Select": {
+      "cardMode": "single",
+      "primaryStory": "Default"
+    },
+    "ColorSwatchPicker": {
+      "skip": [
+        "components-colors-colorswatchpicker--default",
+        "components-colors-colorswatchpicker--disabled",
+        "components-colors-colorswatchpicker--with-default-value",
+        "components-colors-colorswatchpicker--with-custom-indicator"
+      ]
+    },
+    "ListBox": {
+      "skip": [
+        "components-collections-listbox--default",
+        "components-collections-listbox--virtualization"
+      ]
+    },
+    "ScrollShadow": {
+      "skip": [
+        "components-utilities-scrollshadow--orientation",
+        "components-utilities-scrollshadow--visibility-change"
+      ]
+    }
+  },
+  "libOverrides": {
+    "preview-gen-storybook.mjs": "mirror storybook layout:centered (fit-content wrapper) so block-level fields do not stretch to full preview width",
+    "docs.mjs": "derive group from the docs route-group folder (e.g. (typography)) when frontmatter has no category",
+    "source-storybook.mjs": "titles directly under the Components/ root (Typography) get group misc so the docs route-group category applies"
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}
