@@ -34,7 +34,7 @@
     --field-radius: calc(var(--radius) * 1.5);
 
     /* Accent and status hues (shared with the dark theme) */
-    --accent: oklch(0.6204 0.195 253.83);
+    --accent: oklch(0.5109 0.0861 186.39); /* #0F766E teal-700 */
     --accent-foreground: var(--snow);
 
     --success: oklch(0.7329 0.1935 150.81);
@@ -127,7 +127,7 @@
     --background-inverse: var(--foreground);
 
     --default-hover: color-mix(in oklab, var(--default) 96%, var(--default-foreground) 4%);
-    --accent-hover: color-mix(in oklab, var(--accent) 90%, var(--accent-foreground) 10%);
+    --accent-hover: oklch(0.437 0.0705 188.22); /* #115E59 teal-800 */
     --success-hover: color-mix(in oklab, var(--success) 90%, var(--success-foreground) 10%);
     --warning-hover: color-mix(in oklab, var(--warning) 90%, var(--warning-foreground) 10%);
     --danger-hover: color-mix(in oklab, var(--danger) 90%, var(--danger-foreground) 10%);
@@ -264,7 +264,7 @@
     --background-inverse: var(--foreground);
 
     --default-hover: color-mix(in oklab, var(--default) 96%, var(--default-foreground) 4%);
-    --accent-hover: color-mix(in oklab, var(--accent) 90%, var(--accent-foreground) 10%);
+    --accent-hover: oklch(0.437 0.0705 188.22); /* #115E59 teal-800 */
     --success-hover: color-mix(in oklab, var(--success) 90%, var(--success-foreground) 10%);
     --warning-hover: color-mix(in oklab, var(--warning) 90%, var(--warning-foreground) 10%);
     --danger-hover: color-mix(in oklab, var(--danger) 90%, var(--danger-foreground) 10%);
