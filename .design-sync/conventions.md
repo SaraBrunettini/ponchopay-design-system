@@ -29,6 +29,14 @@ Build every screen from these parts instead of hand-made headers, rows or footer
 - Outcomes: `Result status="success|danger|warning|info"` > `Result.Icon` (default icon per status), `Result.Title`, `Result.Description`, `Result.Actions`.
 - Bottom sheets (confirm, choose an option, review): `Drawer` with `placement="bottom"`, with a `TopBar` inside.
 
+## Forms (PonchoPay field layout)
+- Stack fields in `Field.Group` (24px apart; 12px automatically when it holds choice cards). Text inputs stay `TextField` > `Label` + `Input` + `Description`.
+- `Field` for any other label + control layout; `orientation="horizontal"` for a row (e.g. search + button). `isInvalid` / `isDisabled` style the label - also set them on the control.
+- Choice cards (TFC accounts, vouchers, split payments): `Field.Card` around a `Radio` (inside a `RadioGroup`) or a `Checkbox`. Put `Radio.Control` + `Field.Content` (`Field.Title` + `Description`) inside `Radio.Content` so the whole card is the hit area; an amount goes as plain text after `Field.Content`. The selected card gets a neutral fill and the teal control is the only colour - never recolour the card.
+- `Field.Reveal` after the Radio/Checkbox inside a `Field.Card` holds extra inputs, radio lists or a `Button variant="ghost"` link; it shows only while that card is selected. Never put inputs inside the Radio/Checkbox itself.
+- Status on a card: `<Alert status="warning">` inside the `Field.Card`, after the Radio/Checkbox - visible whether or not it's selected. Never a tooltip.
+- Errors outside a `TextField` (a RadioGroup, a group of cards, a Select): wrap in `<FormItem error="…">` with a `Label` first; the label turns red and the message is announced. Inside a `TextField` keep using `FieldError`.
+
 ## Styling your own layout
 Tailwind v4 utility classes **that exist in the shipped stylesheet** - it is a compiled subset, not all of Tailwind:
 - Color tokens: `bg-background`, `bg-surface`, `bg-surface-secondary`, `bg-surface-tertiary`, `bg-default`, `bg-accent`, `bg-accent-soft`, `text-foreground`, `text-muted`, `text-accent`, `text-danger`, `text-success`, `text-warning`, `border-border`, `border-separator`.

@@ -155,6 +155,7 @@
   },
   "readmeHeader": ".design-sync/conventions.md",
   "componentSrcMap": {
-    "PageHeader": "src/ponchopay/page-header/page-header.tsx"
+    "PageHeader": "src/ponchopay/page-header/page-header.tsx",
+    "Fieldset": "src/components/fieldset/fieldset.tsx"
   }
 }

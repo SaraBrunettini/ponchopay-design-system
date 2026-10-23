@@ -1,0 +1,104 @@
+/* ==========================================================================
+   Field layout (PonchoPay)
+
+   .field-group   → stack of fields, 24px apart (12px when it holds choice cards)
+     .field       → label + control + help text (grid, 8px gap); --horizontal = row
+       .field-content → title + description column
+     .field-card  → choice card: a Radio/Checkbox header, optional Alert, then .field-reveal
+       .field-reveal → extra content, shown only while the header control is selected
+   ========================================================================== */
+
+.field-group {
+  @apply grid w-full gap-6;
+
+  &:has(> .field-card, > .radio-group, > .checkbox-group, > .alert) {
+    @apply gap-3;
+  }
+
+  & > .button {
+    @apply justify-self-start;
+  }
+}
+
+.field {
+  @apply grid w-full gap-2;
+
+  &[data-disabled="true"] > .label {
+    @apply status-disabled;
+  }
+}
+
+.field--horizontal {
+  @apply flex flex-row items-center gap-3;
+
+  & > :is(.input, .field-content, .textfield, .search-field, .input-group) {
+    @apply min-w-0 flex-1;
+  }
+
+  &:has(> .field-content [data-slot="description"]) {
+    @apply items-start;
+  }
+}
+
+.field-content {
+  @apply flex min-w-0 flex-1 flex-col gap-1;
+}
+
+.field-title {
+  @apply flex w-fit items-center gap-2 text-sm font-medium text-foreground;
+}
+
+/* Choice card: the whole header row is the Radio/Checkbox hit area */
+.field-card {
+  @apply flex w-full flex-col rounded-2xl border border-border bg-surface transition-colors;
+
+  & > :is(.radio, .checkbox) {
+    @apply w-full;
+  }
+
+  & > .radio > .radio__content,
+  & > .checkbox > .checkbox__content {
+    @apply w-full items-start p-4;
+  }
+
+  & > .alert {
+    @apply mx-4 mb-4 w-auto;
+  }
+
+  /* Unselected controls need an outline to show on the white card */
+  & .radio:not([data-selected]) .radio__control,
+  & .checkbox:not([data-selected="true"]) .checkbox__control {
+    border-width: 1px;
+    border-color: var(--muted);
+  }
+}
+
+/* Selected: neutral fill; the teal control stays the only colour */
+.field-card:has(> .radio[data-selected], > .checkbox[data-selected="true"]),
+.field-card[data-selected="true"] {
+  @apply bg-surface-secondary;
+
+  & > .radio > .radio__content,
+  & > .checkbox > .checkbox__content {
+    @apply pb-3;
+  }
+}
+
+.field-card[data-disabled="true"] {
+  @apply status-disabled;
+}
+
+.field-reveal {
+  @apply flex flex-col gap-3 px-4 pb-4;
+
+  & > .button {
+    @apply self-start;
+  }
+}
+
+.field-card:not([data-selected="true"]):not(
+    :has(> .radio[data-selected], > .checkbox[data-selected="true"])
+  )
+  > .field-reveal {
+  @apply hidden;
+}

@@ -1,0 +1,13 @@
+/* Form item: any control + an error message that shows outside a TextField's own validation */
+.form-item {
+  @apply grid w-full gap-2;
+}
+
+.form-item__message {
+  @apply text-sm text-danger;
+}
+
+/* Only the item's own label turns red, not the labels of options inside it */
+.form-item[data-error="true"] > .label {
+  @apply text-danger;
+}
