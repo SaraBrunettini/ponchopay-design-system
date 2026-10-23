@@ -1,0 +1,36 @@
+/* App tab bar with an optional raised centre action */
+.bottom-nav {
+  @apply flex items-end justify-around border-t border-separator bg-surface px-2 pt-2;
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
+.bottom-nav__item {
+  @apply flex min-w-0 flex-1 cursor-pointer flex-col items-center gap-1 rounded-xl py-1 text-xs text-muted no-underline outline-none select-none no-highlight;
+
+  &:hover,
+  &[data-hovered="true"] {
+    @apply text-foreground;
+  }
+
+  &[data-current="true"] {
+    @apply font-semibold text-foreground;
+  }
+
+  &:focus-visible:not([data-focused]),
+  &[data-focus-visible="true"] {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+}
+
+/* Raised centre action: its first icon becomes a filled circle */
+.bottom-nav__item--action > [data-slot="icon"]:first-child {
+  @apply -mt-6 box-content rounded-full bg-accent p-4 text-accent-foreground shadow-surface;
+}
+
+.bottom-nav__item--action {
+  &:hover > [data-slot="icon"]:first-child,
+  &[data-hovered="true"] > [data-slot="icon"]:first-child {
+    background: var(--accent-hover);
+  }
+}

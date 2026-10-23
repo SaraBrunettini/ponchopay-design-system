@@ -14,7 +14,20 @@ Components are compound - use the dot sub-components, not ad-hoc markup:
 - `Button` `variant`: `primary | secondary | tertiary | outline | ghost | danger | danger-soft`; `size`: `sm | md | lg`.
 - `Surface` (`variant` like Card) is the plain container for grouping content.
 - Overlays (`Modal`, `AlertDialog`, `Drawer`, `Popover`, `Tooltip`, `Dropdown`) take a trigger plus content - read each component's `.prompt.md` for its exact anatomy.
-- Icons: the bundle ships a few (`IconSearch`, `IconPlus`, `IconMinus`, `IconChevronDown/Up/Left/Right`, `IconCalendar`, `InfoIcon`, `SuccessIcon`, `DangerIcon`, `CloseIcon`, `ExternalLinkIcon`). For anything else use inline SVG sized `size-4`/`size-5` with `currentColor`.
+- Icons: always `<Icon name="…" />` with a kebab-case Lucide name (all Lucide icons are bundled), e.g. `<Button><Icon name="mail" /> Login with Email</Button>`. 16px by default (`size={20}` etc.), coloured by `currentColor`, decorative unless you pass `label`. Loading: `<Icon name="loader-circle" spin label="Loading" />`. Payment marks: `brand-apple`, `brand-google`, `brand-klarna`; payment methods use `piggy-bank` (Tax-Free Childcare), `ticket` (vouchers), `credit-card`, `landmark` (Pay by Bank). Never paste raw SVG icons.
+- Logo: always `<Logo />` (PonchoPay full logo, 24px high, white wordmark automatically inside `.dark`). `<Logo variant="symbol" />` for the mark only (favicon, avatar, collapsed sidebar). `<Logo theme="dark" />` forces the white wordmark on a dark panel inside a light page. Set size with `height`; never use an `<img>`, recolour or stretch it.
+- Brand colours: the logo uses mint `#00CCA7`; interactive UI uses the teal accent (`bg-accent`, `#0F766E`). They are intentionally different — never use the logo mint for buttons or text.
+
+## App screens (PonchoPay layout)
+Build every screen from these parts instead of hand-made headers, rows or footers - see `Page` stories (Home, Amount, Review, Success) for complete screens:
+- `Page` is the screen: `Page.Header` (sticky top), `Page.Content` (padded column, `gap-4`), `Page.Footer` (sticky bottom). `variant="surface"` for white flow screens; default is the light-grey app background.
+- Top of screen: `PageHeader` for main tabs (`PageHeader.Toolbar` with round `<Button isIconOnly>` icons + `PageHeader.Actions` on the right, then a big `PageHeader.Title`); `TopBar` inside flows (`TopBar.Start` back button, centred `TopBar.Title`, `TopBar.End` close; `TopBar.Content` instead of Title for a search field).
+- `BottomNav` with `BottomNav.Item` (`<Icon size={24} />` + label, `isCurrent` on the active tab) and an optional raised `BottomNav.Action` in the middle.
+- Rows: `List` > `List.Heading`, `List.Item` > `List.Media` (Avatar or Icon) + `List.Content` (`List.Title`, `List.Description`) + `List.End` (info icon or `chevron-right`). Give `List.Item` an `href` or `onPress` to make the whole row tappable. Group rows in a `Card`.
+- Money breakdowns: `SummaryList` > `SummaryList.Row` (`isTotal` on the last) > `SummaryList.Label` + `SummaryList.Value`.
+- Bottom buttons: `ActionBar` inside `Page.Footer`; buttons share the width (`orientation="vertical"` to stack).
+- Outcomes: `Result status="success|danger|warning|info"` > `Result.Icon` (default icon per status), `Result.Title`, `Result.Description`, `Result.Actions`.
+- Bottom sheets (confirm, choose an option, review): `Drawer` with `placement="bottom"`, with a `TopBar` inside.
 
 ## Styling your own layout
 Tailwind v4 utility classes **that exist in the shipped stylesheet** - it is a compiled subset, not all of Tailwind:

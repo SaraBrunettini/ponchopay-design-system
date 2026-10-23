@@ -1,0 +1,22 @@
+/* App screen: background, sticky header/footer, scrolling content */
+.page {
+  @apply flex min-h-full w-full flex-col bg-background text-foreground;
+}
+
+.page--surface {
+  @apply bg-surface;
+}
+
+.page__header {
+  @apply sticky top-0 z-10;
+  background: inherit;
+}
+
+.page__content {
+  @apply flex flex-1 flex-col gap-4 px-4 pt-2 pb-6;
+}
+
+.page__footer {
+  @apply sticky bottom-0 z-10 mt-auto;
+  background: inherit;
+}

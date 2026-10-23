@@ -1,0 +1,20 @@
+/* Label / value rows, e.g. fee and total on a review screen */
+.summary-list {
+  @apply flex flex-col gap-3;
+}
+
+.summary-list__row {
+  @apply flex items-baseline justify-between gap-4 text-sm;
+}
+
+.summary-list__row--total {
+  @apply border-t border-separator pt-3 text-base font-semibold;
+}
+
+.summary-list__label {
+  @apply flex items-center gap-1.5 text-foreground;
+}
+
+.summary-list__value {
+  @apply text-end text-foreground tabular-nums;
+}

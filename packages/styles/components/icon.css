@@ -1,0 +1,8 @@
+/* Lucide icon wrapper. Size comes from the component's `size` prop; colour follows currentColor. */
+.icon {
+  @apply inline-flex shrink-0;
+}
+
+.icon--spin {
+  @apply animate-spin motion-reduce:animate-none;
+}

@@ -1,0 +1,28 @@
+/* Large screen header: icon-button toolbar above a big title */
+.page-header {
+  @apply flex flex-col gap-3 px-4 pt-4 pb-2;
+}
+
+.page-header__toolbar {
+  @apply flex items-center justify-between gap-2;
+}
+
+.page-header__actions {
+  @apply ms-auto flex items-center gap-2;
+}
+
+/* Round icon buttons sit on surface circles over the page background */
+.page-header__toolbar .button--icon-only {
+  --button-bg: var(--surface);
+  --button-bg-hover: var(--surface-secondary);
+  --button-bg-pressed: var(--surface-secondary);
+  --button-fg: var(--accent);
+}
+
+.page-header__title {
+  @apply text-3xl font-bold tracking-tight text-foreground;
+}
+
+.page-header__description {
+  @apply text-sm text-muted;
+}

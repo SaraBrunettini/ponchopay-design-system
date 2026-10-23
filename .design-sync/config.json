@@ -153,5 +153,8 @@
     "docs.mjs": "derive group from the docs route-group folder (e.g. (typography)) when frontmatter has no category",
     "source-storybook.mjs": "titles directly under the Components/ root (Typography) get group misc so the docs route-group category applies"
   },
-  "readmeHeader": ".design-sync/conventions.md"
+  "readmeHeader": ".design-sync/conventions.md",
+  "componentSrcMap": {
+    "PageHeader": "src/ponchopay/page-header/page-header.tsx"
+  }
 }

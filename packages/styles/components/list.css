@@ -1,0 +1,52 @@
+/* Rows of media + title/description + trailing content */
+.list {
+  @apply flex flex-col;
+}
+
+.list__heading {
+  @apply pb-1 text-base font-semibold text-foreground;
+}
+
+.list__item {
+  @apply flex min-h-14 w-full items-center gap-3 py-3 text-start text-foreground no-underline outline-none;
+}
+
+.list__item--interactive {
+  @apply -mx-2 w-[calc(100%+1rem)] cursor-pointer rounded-2xl px-2 select-none no-highlight;
+
+  &:hover,
+  &[data-hovered="true"] {
+    @apply bg-default;
+  }
+
+  &:active,
+  &[data-pressed="true"] {
+    @apply bg-default-hover;
+  }
+
+  &:focus-visible:not([data-focused]),
+  &[data-focus-visible="true"] {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+}
+
+.list__media {
+  @apply flex shrink-0 items-center justify-center;
+}
+
+.list__content {
+  @apply flex min-w-0 flex-1 flex-col gap-0.5;
+}
+
+.list__title {
+  @apply text-sm font-medium text-foreground;
+}
+
+.list__description {
+  @apply text-sm text-muted;
+}
+
+.list__end {
+  @apply flex shrink-0 items-center gap-2 text-muted;
+}

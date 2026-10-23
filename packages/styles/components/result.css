@@ -1,0 +1,40 @@
+/* Outcome screen: status icon, title, message, actions */
+.result {
+  @apply flex flex-col items-center gap-3 px-6 py-10 text-center;
+}
+
+.result__icon {
+  @apply mb-2 flex size-20 items-center justify-center rounded-full;
+}
+
+.result--success .result__icon {
+  @apply bg-success text-success-foreground;
+}
+
+.result--danger .result__icon {
+  @apply bg-danger text-danger-foreground;
+}
+
+.result--warning .result__icon {
+  @apply bg-warning text-warning-foreground;
+}
+
+.result--info .result__icon {
+  @apply bg-accent text-accent-foreground;
+}
+
+.result__title {
+  @apply text-2xl font-bold tracking-tight text-foreground;
+}
+
+.result__description {
+  @apply max-w-sm text-sm text-muted;
+}
+
+.result__actions {
+  @apply mt-4 flex w-full max-w-xs flex-col gap-2;
+
+  & > * {
+    @apply w-full;
+  }
+}

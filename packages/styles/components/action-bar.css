@@ -1,0 +1,17 @@
+/* Bottom buttons; each child stretches to share the width */
+.action-bar {
+  @apply flex gap-3 px-4 pt-3;
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+
+  & > * {
+    @apply min-w-0 flex-1;
+  }
+}
+
+.action-bar--vertical {
+  @apply flex-col;
+
+  & > * {
+    @apply w-full flex-none;
+  }
+}

@@ -1,0 +1,21 @@
+/* Compact bar: start action, centred title or content, end actions */
+.top-bar {
+  @apply grid min-h-14 items-center gap-2 px-4 py-2;
+  grid-template-columns: minmax(2.5rem, auto) minmax(0, 1fr) minmax(2.5rem, auto);
+}
+
+.top-bar__start {
+  @apply col-start-1 flex items-center justify-start;
+}
+
+.top-bar__title {
+  @apply col-start-2 truncate text-center text-base font-medium text-foreground;
+}
+
+.top-bar__content {
+  @apply col-start-2 flex min-w-0 items-center;
+}
+
+.top-bar__end {
+  @apply col-start-3 flex items-center justify-end gap-1;
+}

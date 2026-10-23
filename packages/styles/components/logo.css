@@ -1,0 +1,27 @@
+/* PonchoPay brand logo. Height comes from the component's `height` prop; width follows the artwork. */
+.logo {
+  --logo-wordmark: #1a2535;
+
+  @apply inline-flex shrink-0 leading-none;
+
+  & > svg {
+    @apply block h-full w-auto;
+  }
+}
+
+/* White wordmark for dark surfaces. The coloured symbol never changes. */
+.logo--dark {
+  --logo-wordmark: #ffffff;
+}
+
+:where(.dark, [data-theme="dark"]) .logo--auto {
+  --logo-wordmark: #ffffff;
+}
+
+.logo--light {
+  /* No styles as the navy wordmark is the default */
+}
+
+.logo--symbol {
+  /* Symbol has no wordmark; sizing is shared with the full logo */
+}
